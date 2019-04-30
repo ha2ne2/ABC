@@ -31,21 +31,40 @@ namespace ABC120
             int N = tmp[0]; // 島の数
             int M = tmp[1]; // 橋の数
 
-            int[][] nodes = new int[M][];
-            M.Times(m => {
-                nodes[m] = ReadIntArray();
-            });
-
-
-            int[] data = new int[N];
-
-            foreach(var node in nodes)
+            int[] A = new int[M];
+            int[] B = new int[M];
+            for (int i = 0; i < M; i++)
             {
-                data[node[0]]++;
-                data[node[1]]++;
+                int[] tmp2 = ReadIntArray();
+                A[i] = tmp2[0] - 1;
+                B[i] = tmp2[1] - 1;
             }
-            
 
+            long cur = N * (N - 1) / 2;
+
+            UnionFindTree uf = new UnionFindTree(N);
+            List<long> res = new List<long>();
+            for (int i = 0; i < M; i++)
+            {
+                res.Add(cur);
+
+                int a = A[M - 1 - i];
+                int b = B[M - 1 - i];
+                if (uf.IsSameGroup(a, b)) continue;
+
+                long sa = uf.Size(a);
+                long sb = uf.Size(b);
+
+                cur -= sa * sb;
+                uf.Merge(a, b);
+            }
+
+            res.Reverse();
+            int len = res.Count;
+            for (int i = 0; i < len; i++)
+            {
+                Console.WriteLine(res[i]);
+            }
         }
 
         static void Unification()
@@ -201,6 +220,7 @@ namespace ABC120
 
         /// <summary>
         /// Rubyにあるようなやつ
+        /// ex) 5.Times(i => Console.WriteLine(i));
         /// </summary>
         /// <param name="times"></param>
         /// <param name="action"></param>
@@ -211,11 +231,24 @@ namespace ABC120
                 action(i);
             }
         }
+
+        /// <summary>
+        /// 引数aと引数bの値を入れ替えます
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T _a = a;
+            a = b;
+            b = _a;
+        }
     }
 
     /// <summary>
+    /// HashSetの比較方法を指定したいときに使います。HashSetのコンストラクタに渡して使います。
     /// EqualsとGetHashCodeを提供します。IEqualityComparer<T>を実装するクラスです。
-    /// HashSetのコンストラクタに渡すために使います。
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class EqualityComparer<T> : IEqualityComparer<T>
@@ -237,6 +270,68 @@ namespace ABC120
         public int GetHashCode(T obj)
         {
             return _getHashCode(obj);
+        }
+    }
+
+    /// <summary>
+    /// UnionFindTree
+    /// </summary>
+    public class UnionFindTree
+    {
+        int[] Node;
+
+        public UnionFindTree(int N)
+        {
+            Node = new int[N];
+            for (int i = 0; i < N; i++)
+            {
+                Node[i] = -1;
+            }
+        }
+
+        public bool IsSameGroup(int x, int y)
+        {
+            return GetRoot(x) == GetRoot(y);
+        }
+
+        public bool Merge(int x, int y)
+        {
+            int xr = GetRoot(x);
+            int yr = GetRoot(y);
+
+            if (xr == yr)
+                return false;
+
+            //// xが、大きなグループを示すようにSwapする
+            // -2 > -3 というような比較になる
+            if (Node[xr] > Node[yr])
+                Swap(ref xr, ref yr);
+
+            // グループの数を合算する
+            Node[xr] += Node[yr];
+
+            // 根を張り替える
+            Node[yr] = x;
+            return true;
+        }
+
+        public int Size(int x)
+        {
+            return -Node[GetRoot(x)];
+        }
+
+        public int GetRoot(int n)
+        {
+            if (Node[n] < 0)
+            {
+                return n;
+            }
+            else
+            {
+                // 根を張りなおす。
+                Node[n] = GetRoot(Node[n]);
+                return Node[n];
+            }
         }
     }
 
