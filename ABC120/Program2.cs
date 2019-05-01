@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ABC120.Util;
+using static System.Console;
+using static ABC120_2.Util;
 
-namespace ABC120
+namespace ABC120_2
 {
-    class Program
+    class Program2
     {
         static void Main(string[] args)
         {
@@ -15,11 +17,11 @@ namespace ABC120
             while (true)
             {
 #endif
-                // 2019/04/29
-                // FavoriteSound(); 5min
-                // KthCommonDivisor(); // 27min
-                // Unification(); // 52min
-                DecayedBridges();
+                // 2019/05/01
+                // FavoriteSound();    //  5m -> 4m
+                // KthCommonDivisor(); // 27m -> 12m
+                // Unification();      // 52m -> 17m
+                DecayedBridges();      // 4h
 #if DEBUG
             }
 #endif
@@ -28,8 +30,8 @@ namespace ABC120
         static void DecayedBridges()
         {
             int[] tmp = ReadIntArray();
-            int N = tmp[0]; // 島の数
-            int M = tmp[1]; // 橋の数
+            int N = tmp[0];
+            int M = tmp[1];
 
             int[] A = new int[M];
             int[] B = new int[M];
@@ -40,54 +42,52 @@ namespace ABC120
                 B[i] = tmp2[1] - 1;
             }
 
-            long cur = N * (N - 1) / 2;
+            List<long> result = new List<long>();
+            long ikenaiPair = (long)N * (N - 1) / 2;
+            result.Add(ikenaiPair);
 
-            UnionFindTree uf = new UnionFindTree(N);
-            List<long> res = new List<long>();
-            for (int i = 0; i < M; i++)
+            var uf = new UnionFindTree(N);
+            for (int i = 0; i < M - 1; i++)
             {
-                res.Add(cur);
-
                 int a = A[M - 1 - i];
                 int b = B[M - 1 - i];
-                if (uf.IsSameGroup(a, b)) continue;
 
-                long sa = uf.Size(a);
-                long sb = uf.Size(b);
-
-                cur -= sa * sb;
-                uf.Merge(a, b);
+                if (!uf.IsSameGroup(a, b))
+                {
+                    ikenaiPair -= (long)uf.Size(a) * uf.Size(b);
+                    uf.Merge(a, b);
+                }
+                result.Add(ikenaiPair);
             }
 
-            res.Reverse();
-            int len = res.Count;
-            for (int i = 0; i < len; i++)
-            {
-                Console.WriteLine(res[i]);
-            }
+            result.Reverse();
+
+            DontAutoFlush();
+            foreach (var a in result) WriteLine(a);
+            Flush();
         }
 
         static void Unification()
         {
-            int[] blocks = ReadIntArrayFromBinaryString();
+            int[] cubes = ReadIntArrayFromBinaryString();
 
-            int zero = 0;
-            int one = 0;
-            foreach(var b in blocks)
+            int zeroCnt = 0;
+            int oneCnt = 0;
+            foreach(var cube in cubes)
             {
-                if (b == 0)
+                if (cube == 0)
                 {
-                    zero++;
+                    zeroCnt++;
                 }
                 else
                 {
-                    one++;
+                    oneCnt++;
                 }
             }
 
-            int ans = Math.Min(zero, one) * 2;
+            int ans = Math.Min(zeroCnt,oneCnt) * 2;
 
-            Console.WriteLine(ans);
+            WriteLine(ans);
         }
 
         static void KthCommonDivisor()
@@ -97,28 +97,17 @@ namespace ABC120
             int B = tmp[1];
             int K = tmp[2];
 
-            var aDivisor = new List<int>();
+            int[] aDivisor = GetDivisor(A);
 
-            // Aの約数を取得
-            double rootA = Math.Sqrt(A);
-            for (int i = 1; i <= rootA; i++)
-            {
-                if (A % i == 0)
-                {
-                    aDivisor.Add(i);
-                    if (i != rootA)
-                        aDivisor.Add(A / i);
-                }
-            }
+            Array.Reverse(aDivisor);
 
-            int ans = 0;
             int cnt = 0;
-            foreach(var d in aDivisor.OrderByDescending(i => i))
+            int ans = 0;
+            foreach (int d in aDivisor)
             {
                 if (B % d == 0)
                 {
                     cnt++;
-
                     if (cnt == K)
                     {
                         ans = d;
@@ -127,7 +116,29 @@ namespace ABC120
                 }
             }
 
-            Console.WriteLine(ans);
+            WriteLine(ans);
+        }
+
+        static int[] GetDivisor(int n)
+        {
+            double sqrt = Math.Sqrt(n);
+
+            List<int> divisor = new List<int>();
+
+            for (int i = 1; i <= sqrt; i++)
+            {
+                if (n % i == 0)
+                {
+                    divisor.Add(i);
+                    int tmp = n / i;
+                    if (tmp != i)
+                    {
+                        divisor.Add(tmp);
+                    }
+                }
+            }
+
+            return Sort(divisor.ToArray());
         }
 
         static void FavoriteSound()
@@ -138,11 +149,12 @@ namespace ABC120
             int C = tmp[2];
 
             int ans = Math.Min(B / A, C);
+
             Console.WriteLine(ans);
         }
     }
 
-    #region common
+    #region ToolBox
 
     /// <summary>
     /// ユーティリティー
@@ -244,6 +256,20 @@ namespace ABC120
             a = b;
             b = _a;
         }
+
+        /// <summary>
+        /// Console.WriteLineの自動フラッシュをしないようにする
+        /// </summary>
+        public static void DontAutoFlush()
+        {
+            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            Console.SetOut(sw);
+        }
+
+        public static void Flush()
+        {
+            Console.Out.Flush();
+        }
     }
 
     /// <summary>
@@ -272,7 +298,7 @@ namespace ABC120
         {
             return _getHashCode(obj);
         }
-    }
+    }    
 
     /// <summary>
     /// UnionFindTree
@@ -303,8 +329,7 @@ namespace ABC120
             if (xr == yr)
                 return false;
 
-            //// xが、大きなグループを示すようにSwapする
-            // -2 > -3 というような比較になる
+            // xが、大きなグループを示すようにSwapする（値が小さい方が大きなグループ）
             if (Node[xr] > Node[yr])
                 Swap(ref xr, ref yr);
 
@@ -312,7 +337,7 @@ namespace ABC120
             Node[xr] += Node[yr];
 
             // 根を張り替える
-            Node[yr] = x;
+            Node[yr] = xr;
             return true;
         }
 
@@ -473,5 +498,4 @@ namespace ABC120
     }
 
     #endregion
-
 }
