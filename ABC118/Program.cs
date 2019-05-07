@@ -60,14 +60,14 @@ namespace ABC118
             string ans = string.Empty;
 
             int n = N;
-            for (int i = 0; i < M; i++)
+            foreach(int a in A)
             {
                 while (true)
                 {
-                    int j = n - num[A[i]];
+                    int j = n - num[a];
                     if (j >= 0 && dp[j] == dp[n] - 1)
                     {
-                        ans += ((char)(48 + A[i])).ToString();
+                        ans += ((char)(48 + a)).ToString();
                         n = j;
                     }
                     else
