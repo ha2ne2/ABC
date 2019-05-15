@@ -4,14 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ABC114.Util;
+using static ABC112.Util;
 using static System.Console;
+using City = System.Tuple<long, long>;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace ABC114
+/// <summary>
+/// 感想 2019/05/14
+/// </summary>
+namespace ABC112
 {
     class Program
     {
@@ -20,160 +24,64 @@ namespace ABC114
 
         START:
 
-            // Shitigosan(); // 3m
-            // NanaGoYon(); // 9m
-            // NanaGoGo(); // 35m
-            NanaGoRoku();
+            // ProgrammingEducation();
+            TimeLimitExceeded();
 
 #if DEBUG
             goto START;
 #endif
         }
 
-        /// <summary>
-        /// 素因数分解します。
-        /// GetSoinsu(360) == 2^3 * 3^2 * 5^1の場合、
-        /// new int[]{0,0,3,2,0,1}が帰ります。
-        /// a[2] == 3
-        /// a[3] == 2
-        /// a[5] == 1
-        /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        private static int[] GetSoinsu(int n)
+        private static void TimeLimitExceeded()
         {
-            int[] result = new int[n+1];
-            for(int i = 2; i <= n && n != 1; i++)
+            int[] input = ReadIntArray();
+            int N = input[0];
+            int T = input[1];
+            int retValue = int.MaxValue;
+
+            int[][] C = new int[N][];
+            for (int i = 0; i < N; i++)
             {
-                while (n % i == 0)
+                C[i] = ReadIntArray();
+            }
+
+            foreach (var rec in C)
+            {
+                if (T < rec[1])
                 {
-                    n /= i;
-                    result[i]++;
+                    continue;
                 }
-            }
-
-            return result;
-        }
-
-        private static void NanaGoRoku()
-        {
-            int N = ReadInt();
-            int[] soinsu = new int[100+1];
-
-            // N!を素因数分解する
-            for (int i = 2; i <= N; i++)
-            {
-                int[] soinsuI = GetSoinsu(i);
-                for (int j = 2; j <= i; j++) {
-                    soinsu[j] += soinsuI[j];
-                }
-            }
-
-            // 約数の数が75個になる数は以下の4種類
-            // a^4 * b^4 * c^2 
-            // a^14 * b^4
-            // a^24 * b^2
-            // a^74
-
-            Func<int, int> f = (i) =>
-            {
-                return soinsu.Where(n => n >= i).Count();
-            };
-
-            long ans = 0;
-            ans += f(74);
-            ans += f(24) * (f(2) - 1);
-            ans += f(14) * (f(4) - 1);
-            ans += f(4) * (f(4) - 1) * (f(2) - 2) / 2;
-
-            WriteLine(ans);
-
-        }
-
-
-        private static long[] f(int n)
-        {
-            if (n == 0)
-                return new long[]{ 0 };
-
-            List<long> ans = new List<long>();
-            foreach (var l in f(n - 1)) {
-                ans.Add(l * 10 + 7);
-                ans.Add(l * 10 + 5);
-                ans.Add(l * 10 + 3);
-            }
-            return ans.ToArray();
-        }
-
-        private static bool Contains753(long n)
-        {
-            bool flag7 = false;
-            bool flag5 = false;
-            bool flag3 = false;
-
-            while (n != 0)
-            {
-                long tmp = n % 10;
-                if (tmp == 7) flag7 = true;
-                if (tmp == 5) flag5 = true;
-                if (tmp == 3) flag3 = true;
-                n /= 10;
-            }
-
-            return flag7 && flag5 && flag3;
-        }
-
-        private static void NanaGoGo()
-        {
-            int N = ReadInt();
-            int n = N;
-            int keta = 0;
-            while (n != 0)
-            {
-                n /= 10;
-                keta++;
-            }
-
-            long ans = 0;
-            for (int i = 3; i <= keta; i++)
-            {
-                long[] numList = f(i);
-                foreach (var num in numList)
+                if (retValue > rec[0])
                 {
-                    if (num <= N && Contains753(num))
-                        ans++;
+                    retValue = rec[0];
                 }
             }
 
-            WriteLine(ans);
-        }
-
-        private static void NanaGoYon()
-        {
-            string S = ReadString();
-            int len = S.Length;
-
-            long min = INF;
-            for (int i = 0; i < len - 2; i++)
+            if (retValue == int.MaxValue)
             {
-                ChMin(ref min, Math.Abs(long.Parse(S.Substring(i, 3)) - 753));
-            }
-
-            WriteLine(min);
-        }
-
-        private static void Shitigosan()
-        {
-            int X = ReadInt();
-            if (X == 7 || X == 5 || X == 3)
-            {
-                WriteLine("YES");
+                WriteLine("TLE");
             }
             else
             {
-                WriteLine("NO");
+                WriteLine(retValue);
             }
 
+        }
+
+        private static void ProgrammingEducation()
+        {
+            int N = ReadInt();
+
+            if (N == 1)
+            {
+                WriteLine("Hello World");
+            }
+            else if (N == 2)
+            {
+                int A = ReadInt();
+                int B = ReadInt();
+                WriteLine(A + B);
+            }
         }
     }
 
@@ -458,6 +366,14 @@ namespace ABC114
         public static void ChMin(ref long a, long b)
         {
             if (a > b) a = b;
+        }
+
+        public readonly static int MOD = 1000000007;
+        public static void ModAdd(ref long a, long b)
+        {
+            a += b;
+            if (a >= MOD)
+                a %= MOD;
         }
 
 #if DEBUG

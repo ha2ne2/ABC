@@ -4,14 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ABC114.Util;
+using static ABC113.Util;
 using static System.Console;
+using City = System.Tuple<long, long>;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
-namespace ABC114
+/// <summary>
+/// 感想 2019/05/14
+/// </summary>
+namespace ABC113
 {
     class Program
     {
@@ -19,11 +23,10 @@ namespace ABC114
         {
 
         START:
-
-            // Shitigosan(); // 3m
-            // NanaGoYon(); // 9m
-            // NanaGoGo(); // 35m
-            NanaGoRoku();
+            // DiscountFare(); // 5m
+            // Palace(); // 18m
+            // ID(); // 40m
+            NumberOfAmidakuji();
 
 #if DEBUG
             goto START;
@@ -31,149 +34,257 @@ namespace ABC114
         }
 
         /// <summary>
-        /// 素因数分解します。
-        /// GetSoinsu(360) == 2^3 * 3^2 * 5^1の場合、
-        /// new int[]{0,0,3,2,0,1}が帰ります。
-        /// a[2] == 3
-        /// a[3] == 2
-        /// a[5] == 1
+        /// フィボナッチ数列を使うバージョン
+        /// O(HW)
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        private static int[] GetSoinsu(int n)
+        private static void NumberOfAmidakuji3()
         {
-            int[] result = new int[n+1];
-            for(int i = 2; i <= n && n != 1; i++)
+            int[] input = ReadIntArray();
+            int H = input[0];
+            int W = input[1];
+            int K = input[2];
+
+            int[] fib = new int[9];
+            fib[0] = 1;
+            fib[1] = 1;
+            for (int i = 2; i < 9; i++)
             {
-                while (n % i == 0)
+                fib[i] = fib[i - 1] + fib[i - 2];
+            }
+
+            long[,] dp = new long[H + 1, W + 1];
+
+            dp[0, 1] = 1;
+
+            for (int i = 0; i < H; i++)
+            {
+                for (int j = 1; j <= W; j++)
                 {
-                    n /= i;
-                    result[i]++;
+                    // 左に移動
+                    if (j >= 2)
+                        ModAdd(ref dp[i + 1, j - 1], (fib[j - 2] * fib[W - j]) * dp[i, j]);
+
+                    // 右に移動
+                    if (j <= W - 1)
+                        ModAdd(ref dp[i + 1, j + 1], (fib[j - 1] * fib[W - j - 1]) * dp[i, j]);
+
+                    // そのまま下に移動
+                    ModAdd(ref dp[i + 1, j], (fib[j - 1] * fib[W - j]) * dp[i, j]);
                 }
             }
 
-            return result;
-        }
-
-        private static void NanaGoRoku()
-        {
-            int N = ReadInt();
-            int[] soinsu = new int[100+1];
-
-            // N!を素因数分解する
-            for (int i = 2; i <= N; i++)
-            {
-                int[] soinsuI = GetSoinsu(i);
-                for (int j = 2; j <= i; j++) {
-                    soinsu[j] += soinsuI[j];
-                }
-            }
-
-            // 約数の数が75個になる数は以下の4種類
-            // a^4 * b^4 * c^2 
-            // a^14 * b^4
-            // a^24 * b^2
-            // a^74
-
-            Func<int, int> f = (i) =>
-            {
-                return soinsu.Where(n => n >= i).Count();
-            };
-
-            long ans = 0;
-            ans += f(74);
-            ans += f(24) * (f(2) - 1);
-            ans += f(14) * (f(4) - 1);
-            ans += f(4) * (f(4) - 1) * (f(2) - 2) / 2;
-
-            WriteLine(ans);
-
-        }
-
-
-        private static long[] f(int n)
-        {
-            if (n == 0)
-                return new long[]{ 0 };
-
-            List<long> ans = new List<long>();
-            foreach (var l in f(n - 1)) {
-                ans.Add(l * 10 + 7);
-                ans.Add(l * 10 + 5);
-                ans.Add(l * 10 + 3);
-            }
-            return ans.ToArray();
-        }
-
-        private static bool Contains753(long n)
-        {
-            bool flag7 = false;
-            bool flag5 = false;
-            bool flag3 = false;
-
-            while (n != 0)
-            {
-                long tmp = n % 10;
-                if (tmp == 7) flag7 = true;
-                if (tmp == 5) flag5 = true;
-                if (tmp == 3) flag3 = true;
-                n /= 10;
-            }
-
-            return flag7 && flag5 && flag3;
-        }
-
-        private static void NanaGoGo()
-        {
-            int N = ReadInt();
-            int n = N;
-            int keta = 0;
-            while (n != 0)
-            {
-                n /= 10;
-                keta++;
-            }
-
-            long ans = 0;
-            for (int i = 3; i <= keta; i++)
-            {
-                long[] numList = f(i);
-                foreach (var num in numList)
-                {
-                    if (num <= N && Contains753(num))
-                        ans++;
-                }
-            }
-
+            long ans = dp[H, K];
             WriteLine(ans);
         }
 
-        private static void NanaGoYon()
+        /// <summary>
+        /// ビット全探索
+        /// O(HW2^W)
+        /// </summary>
+        private static void NumberOfAmidakuji2()
         {
-            string S = ReadString();
-            int len = S.Length;
+            int[] input = ReadIntArray();
+            int H = input[0];
+            int W = input[1];
+            int K = input[2];
 
-            long min = INF;
-            for (int i = 0; i < len - 2; i++)
+            long[,] dp = new long[H + 1, W];
+
+            dp[0, 0] = 1;
+
+            for (int i = 0; i < H; i++)
             {
-                ChMin(ref min, Math.Abs(long.Parse(S.Substring(i, 3)) - 753));
+                for (int j = 0; j < W; j++)
+                {
+                    int keta = W - 1;
+                    int maxBit = 1 << keta;
+                    for (int bit = 0; bit < maxBit; bit++)
+                    {
+                        for (int k = 0; k < keta - 1; k++)
+                        {
+                            // 横棒が連続していたら飛ばす
+                            if (((bit & (1 << k)) > 0) &&
+                                ((bit & (1 << (k + 1))) > 0))
+                            {
+                                goto CONTINUE;
+                            }
+                        }
+
+                        int nj = j;
+                        if ((bit & (1 << j)) > 0)
+                            nj++;
+                        else if ((j > 0) &&
+                                 ((bit & (1 << (j - 1))) > 0))
+                            nj--;
+
+                        ModAdd(ref dp[i + 1, nj], dp[i, j]);
+
+                    CONTINUE:;
+                    }
+                }
             }
 
-            WriteLine(min);
+            long ans = dp[H, K - 1];
+            WriteLine(ans);
         }
 
-        private static void Shitigosan()
+        public static int[][][] AmidaArray = new int[9][][]
         {
-            int X = ReadInt();
-            if (X == 7 || X == 5 || X == 3)
-            {
-                WriteLine("YES");
+            null,
+            new int[1][] {
+                new int[1] { 1 }
+            },
+            new int[2][] {
+                new int[2] { 1, 1 },
+                new int[2] { 1, 1 }
+            },
+            new int[3][] {
+                new int[3] { 2, 1, 0 },
+                new int[3] { 1, 1, 1 },
+                new int[3] { 0, 1, 2 }
+            },
+            new int[4][] {
+                new int[4] { 3, 2, 0, 0 },
+                new int[4] { 2, 2, 1, 0 },
+                new int[4] { 0, 1, 2, 2 },
+                new int[4] { 0, 0, 2, 3 }
+            },
+            new int[5][] {
+                new int[5] { 5, 3, 0, 0, 0 },
+                new int[5] { 3, 3, 2, 0, 0 },
+                new int[5] { 0, 2, 4, 2, 0 },
+                new int[5] { 0, 0, 2, 3, 3 },
+                new int[5] { 0, 0, 0, 3, 5 }
+            },
+            new int[6][] {
+                new int[6] { 8, 5, 0, 0, 0, 0 },
+                new int[6] { 5, 5, 3, 0, 0, 0 },
+                new int[6] { 0, 3, 6, 4, 0, 0 },
+                new int[6] { 0, 0, 4, 6, 3, 0 },
+                new int[6] { 0, 0, 0, 3, 5, 5 },
+                new int[6] { 0, 0, 0, 0, 5, 8 }
+            },
+            new int[7][] {
+                new int[7] { 13, 8, 0, 0, 0, 0, 0 },
+                new int[7] { 8, 8, 5, 0, 0, 0, 0 },
+                new int[7] { 0, 5, 10, 6, 0, 0, 0 },
+                new int[7] { 0, 0, 6, 9, 6, 0, 0 },
+                new int[7] { 0, 0, 0, 6, 10, 5, 0 },
+                new int[7] { 0, 0, 0, 0, 5, 8, 8 },
+                new int[7] { 0, 0, 0, 0, 0, 8, 13 }
+            },
+            new int[8][] {
+                new int[8] { 21, 13, 0, 0, 0, 0, 0, 0 },
+                new int[8] { 13, 13, 8, 0, 0, 0, 0, 0 },
+                new int[8] { 0, 8, 16, 10, 0, 0, 0, 0 },
+                new int[8] { 0, 0, 10, 15, 9, 0, 0, 0 },
+                new int[8] { 0, 0, 0, 9, 15, 10, 0, 0 },
+                new int[8] { 0, 0, 0, 0, 10, 16, 8, 0 },
+                new int[8] { 0, 0, 0, 0, 0, 8, 13, 13 },
+                new int[8] { 0, 0, 0, 0, 0, 0, 13, 21 }
             }
-            else
+        };
+
+        /// <summary>
+        /// 自分で考えたやつ O(HW)
+        /// </summary>
+        private static void NumberOfAmidakuji()
+        {
+            int[] input = ReadIntArray();
+            int H = input[0];
+            int W = input[1];
+            int K = input[2];
+
+            long[,] dp = new long[H+1,W];
+
+            dp[0, 0] = 1;
+
+            for (int i = 0; i < H; i++)
             {
-                WriteLine("NO");
+                for (int j = 0; j < W; j++)
+                {
+                    // 左に移動
+                    if (j > 0)
+                        ModAdd(ref dp[i + 1, j-1], (dp[i, j] * AmidaArray[W][j][j-1]) % MOD);
+
+                    // 右に移動
+                    if (j < W - 1)
+                        ModAdd(ref dp[i + 1, j+1], (dp[i, j] * AmidaArray[W][j][j+1]) % MOD);
+
+                    // 下に移動
+                    ModAdd(ref dp[i + 1, j], (dp[i, j] * AmidaArray[W][j][j]) % MOD);
+                }
             }
 
+            long ans = dp[H, K - 1];
+            WriteLine(ans);
+        }
+
+        private static void ID()
+        {
+            long[] line = ReadLongArray();
+            long N = line[0];
+            long M = line[1];
+
+            City[] C = new City[M];
+            for (int i = 0; i < M; i++)
+            {
+                line = ReadLongArray();
+                C[i] = new City(line[0], line[1]);
+            }
+
+            var groupList = C.GroupBy(c => c.Item1).ToList();
+            var dict = new Dictionary<City, long>();
+            foreach(var group in groupList)
+            {
+                var cityList = group.OrderBy(c => c.Item2).ToList();
+                var len = cityList.Count();
+                for(int i = 0; i < len; i++)
+                {
+                    dict[cityList[i]] = i+1;
+                }
+            }
+
+            DontAutoFlush();
+            foreach(var c in C)
+            {
+                var ans = string.Format("{0:D6}{1:D6}", c.Item1, dict[c]);
+                WriteLine(ans);
+            }
+            Flush();
+        }
+
+        private static void Palace()
+        {
+            long N = ReadLong();
+            long[] line = ReadLongArray();
+            long T = line[0];
+            long A = line[1];
+            long[] H = ReadLongArray();
+
+            List<double> TList = H.Select(h => Math.Abs((T - h * 0.006) - A)).ToList();
+            double min = TList.Min();
+
+            int ans = 0;
+            for (int i = 0; i < N; i++)
+            {
+                if (TList[i] == min)
+                {
+                    ans = i+1;
+                    break;
+                }
+            }
+
+            WriteLine(ans);
+        }
+
+        private static void DiscountFare()
+        {
+            long[] X = ReadLongArray();
+
+            long ans = X[0] + X[1] / 2;
+
+            WriteLine(ans);
         }
     }
 
@@ -458,6 +569,14 @@ namespace ABC114
         public static void ChMin(ref long a, long b)
         {
             if (a > b) a = b;
+        }
+
+        public readonly static int MOD = 1000000007;
+        public static void ModAdd(ref long a, long b)
+        {
+            a += b;
+            if (a >= MOD)
+                a %= MOD;
         }
 
 #if DEBUG
