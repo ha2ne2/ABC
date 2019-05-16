@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static ABC112.Cin;
 using static ABC112.Util;
 using static System.Console;
+using static System.Math;
 using System.Collections;
 
 #if DEBUG
@@ -27,11 +28,34 @@ namespace ABC112
 
             // ProgrammingEducation();
             // TimeLimitExceeded();
-            Pyramid();
+            // Pyramid();
+            Partition();
 
 #if DEBUG
             goto START;
 #endif
+        }
+
+        private static void Partition()
+        {
+            long N = ReadLong();
+            long M = ReadLong();
+
+            int[] divisorList = GetDivisor((int)M);
+
+            ReverseSort(divisorList);
+
+            long ans = 0;
+            foreach (int div in divisorList)
+            {
+                if (M / div >= N)
+                {
+                    ans = div;
+                    break;
+                }
+            }
+
+            WriteLine(ans);
         }
 
         private static void Pyramid()
@@ -39,39 +63,42 @@ namespace ABC112
             long N = ReadLong();
             long[][] table = ReadLongTable(N);
 
-            string ans = null;
+            long si = -1;
+            foreach(int i in Range((int)N))
+            {
+                if (table[i][2] > 0)
+                {
+                    si = i;
+                    break;
+                }
+            }
 
-            foreach(int cx in Range(101))
+            long resx = -1, resy = -1, resh = -1;
+
+            foreach (int cx in Range(101))
             {
                 foreach (int cy in Range(101))
                 {
-                    long? H = null;
-                    bool first = true;
-
-                    CHECK:
-
-                    foreach (long[] info in table)
+                    long h = table[si][2] + Abs(table[si][0] - cx) + Abs(table[si][1] - cy);
+                                        
+                    foreach(long[] info in table)
                     {
-                        long sum = Math.Abs(info[0] - cx) + Math.Abs(info[1] - cy);
-
-                        // Hがnullかつinfo[2]が0じゃないときは、Hを推定する
-                        if (H == null && info[2] != 0)
-                            H = sum + info[2];
-
-                        if (H != null && info[2] == 0 && !(H <= sum))
+                        if (info[2] > 0 && 
+                            h != Abs(info[0] - cx) + Abs(info[1] - cy) + info[2])
+                        {
                             goto CONTINUE;
+                        }
 
-                        if (H != null && H != sum + info[2])
+                        if (info[2] == 0 &&
+                            h > Abs(info[0] - cx) + Abs(info[1] - cy))
+                        {
                             goto CONTINUE;
+                        }
                     }
 
-                    if (first)
-                    {
-                        first = false;
-                        goto CHECK;
-                    }
-
-                    ans = string.Format("{0} {1} {2}", cx, cy, H);
+                    resx = cx;
+                    resy = cy;
+                    resh = h;
                     goto BREAK;
 
                 CONTINUE:;
@@ -79,6 +106,7 @@ namespace ABC112
             }
 
         BREAK:
+            string ans = string.Format("{0} {1} {2}", resx, resy, resh);
             WriteLine(ans);
         }
 
@@ -230,7 +258,6 @@ namespace ABC112
                 yield return i;
             }
         }
-
 
         public static IEnumerable<int> Range(int from, int end)
         {
