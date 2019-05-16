@@ -4,16 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ABC112.Cin;
 using static ABC112.Util;
 using static System.Console;
-using City = System.Tuple<long, long>;
+using System.Collections;
 
 #if DEBUG
 using System.Diagnostics;
 #endif
 
 /// <summary>
-/// 感想 2019/05/14
+/// https://atcoder.jp/contests/abc112/tasks
 /// </summary>
 namespace ABC112
 {
@@ -25,47 +26,83 @@ namespace ABC112
         START:
 
             // ProgrammingEducation();
-            TimeLimitExceeded();
+            // TimeLimitExceeded();
+            Pyramid();
 
 #if DEBUG
             goto START;
 #endif
         }
 
-        private static void TimeLimitExceeded()
+        private static void Pyramid()
         {
-            int[] input = ReadIntArray();
-            int N = input[0];
-            int T = input[1];
-            int retValue = int.MaxValue;
+            long N = ReadLong();
+            long[][] table = ReadLongTable(N);
 
-            int[][] C = new int[N][];
-            for (int i = 0; i < N; i++)
+            string ans = null;
+
+            foreach(int cx in Range(101))
             {
-                C[i] = ReadIntArray();
+                foreach (int cy in Range(101))
+                {
+                    long? H = null;
+                    bool first = true;
+
+                    CHECK:
+
+                    foreach (long[] info in table)
+                    {
+                        long sum = Math.Abs(info[0] - cx) + Math.Abs(info[1] - cy);
+
+                        // Hがnullかつinfo[2]が0じゃないときは、Hを推定する
+                        if (H == null && info[2] != 0)
+                            H = sum + info[2];
+
+                        if (H != null && info[2] == 0 && !(H <= sum))
+                            goto CONTINUE;
+
+                        if (H != null && H != sum + info[2])
+                            goto CONTINUE;
+                    }
+
+                    if (first)
+                    {
+                        first = false;
+                        goto CHECK;
+                    }
+
+                    ans = string.Format("{0} {1} {2}", cx, cy, H);
+                    goto BREAK;
+
+                CONTINUE:;
+                }
             }
 
-            foreach (var rec in C)
+        BREAK:
+            WriteLine(ans);
+        }
+
+        static void TimeLimitExceeded()
+        {
+            int N = ReadInt();
+            int T = ReadInt();
+            int[][] C = ReadIntTable(N);
+            
+            long ans = long.MaxValue;
+            foreach(var c in C)
             {
-                if (T < rec[1])
-                {
-                    continue;
-                }
-                if (retValue > rec[0])
-                {
-                    retValue = rec[0];
-                }
+                if (c[1] > T) continue;
+                ChMin(ref ans, c[0]);
             }
 
-            if (retValue == int.MaxValue)
+            if (ans == long.MaxValue)
             {
                 WriteLine("TLE");
             }
             else
             {
-                WriteLine(retValue);
+                WriteLine(ans);
             }
-
         }
 
         private static void ProgrammingEducation()
@@ -76,47 +113,84 @@ namespace ABC112
             {
                 WriteLine("Hello World");
             }
-            else if (N == 2)
+            else
             {
                 int A = ReadInt();
                 int B = ReadInt();
-                WriteLine(A + B);
+                int ans = A + B;
+                WriteLine(ans);
             }
         }
     }
 
     #region ToolBox
 
-    /// <summary>
-    /// ユーティリティー
-    /// </summary>
-    public static class Util
+    public static class Cin
     {
-        // 10^17
-        public static readonly long INF = (long)1e17;
+        static string[] Tokens { get; set; }
+
+        static int Ptr { get; set; }
+        
+        public static string Next()
+        {
+            if (Tokens == null || Tokens.Length <= Ptr)
+            {
+                Tokens = Console.ReadLine().Split(' ');
+                Ptr = 0;
+            }
+
+            return Tokens[Ptr++];
+        }
 
         public static int ReadInt()
         {
-            return int.Parse(Console.ReadLine());
-        }
-
-        public static int[] ReadIntArray()
-        {
-            return Array.ConvertAll(Console.ReadLine().Split(' '), int.Parse);
+            return int.Parse(Next());
         }
 
         public static long ReadLong()
         {
-            return long.Parse(Console.ReadLine());
+            return long.Parse(Next());
+        }
+
+        public static int[] ReadIntArray()
+        {
+            Tokens = null;
+            return Array.ConvertAll(Console.ReadLine().Split(' '), int.Parse);
         }
 
         public static long[] ReadLongArray()
         {
+            Tokens = null;
             return Array.ConvertAll(Console.ReadLine().Split(' '), long.Parse);
+        }
+
+        public static int[][] ReadIntTable(int n)
+        {
+            Tokens = null;
+            int[][] ret = new int[n][];
+            for (int i = 0; i < n; i++)
+            {
+                ret[i] = ReadIntArray();
+            }
+
+            return ret;
+        }
+
+        public static long[][] ReadLongTable(long n)
+        {
+            Tokens = null;
+            long[][] ret = new long[n][];
+            for (long i = 0; i < n; i++)
+            {
+                ret[i] = ReadLongArray();
+            }
+
+            return ret;
         }
 
         public static string ReadString()
         {
+            Tokens = null;
             return Console.ReadLine();
         }
 
@@ -126,7 +200,8 @@ namespace ABC112
         /// <returns></returns>
         public static int[] ReadIntArrayFromBinaryString()
         {
-            return Console.ReadLine().Select(c => int.Parse(c.ToString())).ToArray();
+            Tokens = null;
+            return Array.ConvertAll(Console.ReadLine().ToArray(), c => int.Parse(c.ToString()));
         }
 
         /// <summary>
@@ -135,7 +210,42 @@ namespace ABC112
         /// <returns></returns>
         public static bool[] ReadBoolArrayFromBinaryString()
         {
+            Tokens = null;
             return Console.ReadLine().Select(c => c == '1').ToArray();
+        }
+    }
+
+    /// <summary>
+    /// ユーティリティー
+    /// </summary>
+    public static class Util
+    {
+        // 10^17
+        public static readonly long INF = (long)1e17;
+
+        public static IEnumerable<int> Range(int end)
+        {
+            for (int i = 0; i < end; i++)
+            {
+                yield return i;
+            }
+        }
+
+
+        public static IEnumerable<int> Range(int from, int end)
+        {
+            for(int i = from; i < end; i++)
+            {
+                yield return i;
+            }
+        }
+
+        public static IEnumerable<int> Range(int from, int end, int step)
+        {
+            for (int i = from; i < end; i+= step)
+            {
+                yield return i;
+            }
         }
 
         /// <summary>
@@ -374,6 +484,38 @@ namespace ABC112
             a += b;
             if (a >= MOD)
                 a %= MOD;
+        }
+
+        public static T MinBy<T>(this IEnumerable<T> source, Func<T, long> conv)
+        {
+            T min = source.First();
+            long minValue = conv(min);
+            foreach(T x in source.Skip(1))
+            {
+                long n = conv(x);
+                if (n < minValue)
+                {
+                    min = x;
+                }
+            }
+
+            return min;
+        }
+
+        public static T MaxBy<T>(this IEnumerable<T> source, Func<T, long> conv)
+        {
+            T min = source.First();
+            long maxValue = conv(min);
+            foreach (T x in source.Skip(1))
+            {
+                long n = conv(x);
+                if (maxValue < n)
+                {
+                    min = x;
+                }
+            }
+
+            return min;
         }
 
 #if DEBUG
