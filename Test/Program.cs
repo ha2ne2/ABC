@@ -10,7 +10,7 @@ using static System.Console;
 using static System.Math;
 using System.Collections;
 
-namespace ABC153
+namespace Test
 {
     class Program
     {
@@ -18,17 +18,55 @@ namespace ABC153
         static void Main(string[] args)
         {
         START:
-            // A(); // 7m
-            // B(); // 11m
-            // C(); // 15m
-            // D(); // 31m
-            // E();
-            F();            
+            D127();
+            // 1 3 6 14 38 77
+            // A(); 1m
+            // B(); 5m
+            // C(); 8m
+            // D(); 10m
+            // E(); 30m
+            // F(); // 36m
 
 #if DEBUG
             goto START;
 #endif
         }
+
+        private static void D127()
+        {
+            long N = ReadLong();
+            long M = ReadLong();
+            long[] As = ReadLongArray();
+
+            List<Tuple<long, long>> BC = new List<Tuple<long, long>>();
+            for(int i = 0; i < M; i++)
+            {
+                long b = ReadLong();
+                long c = ReadLong();
+                BC.Add(new Tuple<long, long>(b, c));                
+            }
+
+            BC = BC.OrderByDescending(bc => bc.Item2).ToList();
+            As = As.OrderBy(a => a).ToArray();
+
+            long jSum = 0;
+            for (int i = 0; i < M; i++)
+            {                
+                for (int j = 0; j < BC[i].Item1; j++)
+                {
+                    long nj = jSum + j;
+                    if (N <= nj || BC[i].Item2 <= As[nj])
+                        goto BIG_BREAK;
+
+                    As[nj] = BC[i].Item2;
+                }
+                jSum += BC[i].Item1;
+            }
+        BIG_BREAK:
+            long ans = As.Sum();
+            WriteLine(ans);
+        }
+
 
         class Monster
         {
@@ -38,25 +76,25 @@ namespace ABC153
 
         private static void F()
         {
-            int N = ReadInt();
-            int D = ReadInt();
-            int A = ReadInt();
+            long N = ReadLong();
+            long D = ReadLong();
+            long A = ReadLong();
             Monster[] monsters = new Monster[N];
-            for (int i = 0; i < N; i++)
+            for(int i = 0; i < N; i++)
             {
                 var m = new Monster();
-                m.X = ReadInt();
-                m.H = ReadInt();
+                m.X = ReadLong();
+                m.H = ReadLong();
                 monsters[i] = m;
             }
 
             monsters = monsters.OrderBy(m => m.X).ToArray();
 
-            long[] counts = new long[N];
             long countSum = 0;
+            long[] counts = new long[N];
             int l = 0;
 
-            for (int i = 0; i < N; i++)
+            for(int i = 0; i < N; i++)
             {
                 while (monsters[l].X + 2 * D < monsters[i].X)
                 {
@@ -64,8 +102,7 @@ namespace ABC153
                     l++;
                 }
 
-                long already = countSum * A;
-                var hp = Max(0, monsters[i].H - already);
+                var hp = Max(monsters[i].H - countSum * A, 0);
                 var cnt = hp / A;
                 if (hp % A != 0) cnt++;
 
@@ -76,35 +113,31 @@ namespace ABC153
             WriteLine(counts.Sum());
         }
 
-
         private static void E()
         {
-            int H = ReadInt();
-            int N = ReadInt();
-
-            int[] A = new int[N];
-            int[] B = new int[N];
+            long H = ReadLong();
+            long N = ReadLong();
+            long[] A = new long[N];
+            long[] B = new long[N];
 
             for (int i = 0; i < N; i++)
             {
-                A[i] = ReadInt();
-                B[i] = ReadInt();
+                A[i] = ReadLong();
+                B[i] = ReadLong();
             }
 
-
-            int[] dp = new int[H + 1];
+            long[] dp = new long[H+1];
             for (int i = 0; i <= H; i++)
-                dp[i] = int.MaxValue;
+                dp[i] = long.MaxValue;
 
             dp[0] = 0;
 
             for (int i = 0; i <= H; i++)
             {
-                if (dp[i] == int.MaxValue) continue;
-
+                if (dp[i] == long.MaxValue) continue;
                 for (int j = 0; j < N; j++)
                 {
-                    int ni = Min(i + A[j], H);
+                    long ni = Min(H, i + A[j]);
                     dp[ni] = Min(dp[ni], dp[i] + B[j]);
                 }
             }
@@ -116,48 +149,45 @@ namespace ABC153
         {
             long H = ReadLong();
 
-            int cnt = 0;
-            while (0 < H)
+            long cnt = 0;
+            while(0 < H)
             {
                 H /= 2;
                 cnt++;
             }
 
             long ans = 0;
-            for (int i = 0; i < cnt; i++)
-            {
-                ans += (long)Math.Pow(2, i);
-            }
+            for (; 0 < cnt; cnt--)
+                ans = ans * 2 + 1;
 
             WriteLine(ans);
         }
 
         private static void C()
         {
-            int N = ReadInt();
+            long N = ReadLong();
             int K = ReadInt();
             long[] H = ReadLongArray();
+            var ans = H.OrderByDescending(h => h).Skip(K).Sum();
 
-            long ans = H.OrderByDescending(h => h).Skip(K).Sum();
             WriteLine(ans);
         }
 
         private static void B()
         {
-            int H = ReadInt();
-            int N = ReadInt();
-            int[] As = ReadIntArray();
-            int a = As.Sum();
-
-            WriteLine(a >= H ? "Yes" : "No");
+            long H = ReadLong();
+            long N = ReadLong();
+            long[] A = ReadLongArray();
+            
+            WriteLine(A.Sum() >= H ? "Yes" : "No");
         }
 
         private static void A()
         {
-            int H = ReadInt();
-            int A = ReadInt();
+            long H = ReadLong();
+            long A = ReadLong();
 
-            int ans = H / A;
+            long ans = H / A;
             if (H % A != 0)
                 ans++;
 
