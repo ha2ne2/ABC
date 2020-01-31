@@ -35,13 +35,163 @@ namespace DPMatome
             // M();  80m ->  8m -> 3m
             // N(); 130m ->
             // O();  50m -> 10m
-
-
-
+            //----------------------------- 2020/01/31
+            // P();  80m -> 15m -> 6m
+            Q();
 
 #if DEBUG
             goto START;
 #endif
+        }
+
+        public static void Q()
+        {
+            long N = rl;
+            long[] h = rla;
+            long[] a = rla;
+
+            long[] memo = new long[N];
+            FillArray(memo, -1);
+            
+            Func<long,long> rec = null;
+            rec = (i) =>
+            {
+                if (memo[i] != -1) return memo[i];
+
+                long res = 0;
+                for (int j = (int)i+1; j < N; j++)
+                {
+                    if (h[i] <= h[j])
+                        ChMax(ref res, rec(j));
+                }
+
+                memo[i] = res + a[i];
+                return memo[i];
+            };
+
+            long ans = 0;
+            for (int i = 0; i < N; i++)
+            {
+                ChMax(ref ans, rec(i));
+            }
+
+            Console.WriteLine(ans);
+        }
+
+        public static void P()
+        {
+            long N = rl;
+            long[] xs = new long[N - 1];
+            long[] ys = new long[N - 1];
+            for (int i = 0; i < N-1; i++)
+            {
+                xs[i] = rl - 1;
+                ys[i] = rl - 1;
+            }
+
+            List<List<long>> G = new List<List<long>>();
+            for (int i = 0; i < N; i++)
+            {
+                G.Add(new List<long>());
+            }
+            for (int i = 0; i < N-1; i++)
+            {
+                G[(int)xs[i]].Add(ys[i]);
+                G[(int)ys[i]].Add(xs[i]);
+            }
+
+            long[,] memo = new long[N, 2];
+            FillArray(memo, -1);
+
+            Func<long, long, long, long> rec = null;
+            rec = (from, v, w) =>
+            {
+                if (memo[v, w] != -1) return memo[v, w];
+
+                long res = 1;
+                foreach(long nv in G[(int)v])
+                {
+                    if (nv == from)
+                        continue;
+                    long res1 = 0;
+                    if (w == 0)
+                        res1 = rec(v, nv, 1);
+                    long res2 = rec(v, nv, 0);
+
+                    res = ModMul(res, ModAdd(res1, res2));
+                }
+
+                memo[v, w] = res;
+                return res;
+            };
+
+            long ans = ModAdd(rec(-1, 0, 0), rec(-1, 0, 1));
+            Console.WriteLine(ans);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static void P2()
+        {
+            long N = ReadInt();
+            long[] xs = new long[N - 1];
+            long[] ys = new long[N - 1];
+            for (int i = 0; i < N - 1; i++)
+            {
+                xs[i] = ReadLong() - 1;
+                ys[i] = ReadLong() - 1;
+            }
+
+            List<List<long>> G = new List<List<long>>();
+            for (int i = 0; i < N; i++)
+            {
+                G.Add(new List<long>());
+            }
+            for (int i = 0; i < N - 1; i++)
+            {
+                G[(int)xs[i]].Add(ys[i]);
+                G[(int)ys[i]].Add(xs[i]);
+            }
+
+            long[,] memo = new long[N, 2];
+            FillArray(memo, -1);
+
+            Func<long, long, long, long> rec = null;
+            rec = (from, v, w) =>
+            {
+                if (memo[v, w] != -1) return memo[v, w];
+
+                long res = 1;
+                foreach(var nv in G[(int)v])
+                {
+                    if (nv == from)
+                        continue;
+
+                    long res1 = 0;
+                    if (w == 0)
+                        res1 = rec(v, nv, 1);
+                    long res2 = rec(v, nv, 0);
+
+                    res = (res * ((res1 + res2) % MOD)) % MOD;
+                }
+
+                memo[v, w] = res;
+                return res;
+            };
+
+            long ans = (rec(-1, 0, 0) + rec(-1, 0, 1)) % MOD;
+            Console.WriteLine(ans);
+
         }
 
         public static void O()
@@ -78,11 +228,6 @@ namespace DPMatome
 
             Console.WriteLine(dfs((1 << (int)N) - 1, 0));
         }
-
-
-
-
-
 
         public static void O1()
         {
@@ -297,10 +442,6 @@ namespace DPMatome
             Console.WriteLine(ans);
         }
 
-
-
-
-
         public static void L1()
         {
             long N = rl;
@@ -374,21 +515,6 @@ namespace DPMatome
             Console.WriteLine(ans);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public static void K_()
         {
             long N = rl;
@@ -449,18 +575,7 @@ namespace DPMatome
             double ans = rec(sara[0], sara[1], sara[2]);
             Console.WriteLine(ans);
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        
         public static void J_()
         {
             long N = rl;
@@ -1219,7 +1334,22 @@ namespace Ha2ne2Util
         }
 
         public readonly static int MOD = 1000000007;
-        public static void ModAdd(ref long a, long b)
+        public static long ModAdd(long a, long b)
+        {
+            long res = a + b;
+            if (res >= MOD)
+                return res % MOD;
+            return res;
+        }
+        public static long ModMul(long a, long b)
+        {
+            long res = a * b;
+            if (res >= MOD)
+                return res % MOD;
+            return res;
+        }
+
+        public static void ModAddEqual(ref long a, long b)
         {
             a += b;
             if (a >= MOD)
