@@ -12,10 +12,10 @@ using System.Collections;
 using Pair = System.Tuple<long, long>;
 
 /// <summary>
-/// https://atcoder.jp/contests/abc108
-/// 2020/02/01 2完 パフォ720
+/// https://atcoder.jp/contests/abc107
+/// 2020/02/01 3完 R1330相当
 /// </summary>
-namespace ABC108
+namespace ABC107
 {
     public class Program
     {
@@ -23,10 +23,11 @@ namespace ABC108
         {
         START:
             A();
-            // A(); 5m 1m
-            // B(); 32m 4m
-            // C(); 降参 11m (R1600)
-            // D(); 700点問題 やらない
+
+            // A();  3m   4m
+            // B(); 13m   8m
+            // C(); 58m  14m
+            // D(); // 分からん降参
 
 #if DEBUG
             goto START;
@@ -42,52 +43,69 @@ namespace ABC108
         {
             long N = rl;
             long K = rl;
+            long[] xs = rla;
 
-            if (K % 2 == 1)
+            long ans = INF;
+            for (int i = 0; i + K - 1 < N; i++) 
             {
-                long a = N / K;
-                Console.WriteLine(a * a * a);
-            }
-            else
-            {
-                long a = N / K;
-                long b = (N + (K / 2)) / K;
-                Console.WriteLine(a * a * a + b * b * b);
-            }
-        }
-
-        public static void B()
-        {
-            long x1 = rl;
-            long y1 = rl;
-            long x2 = rl;
-            long y2 = rl;
-
-            long x = x2;
-            long y = y2;
-            long dx = x2 - x1;
-            long dy = y2 - y1;
-
-            string ans = string.Empty;
-            for (int i = 0; i < 2; i++)
-            {
-                Swap(ref dx, ref dy);
-                dx = -dx;
-                x += dx;
-                y += dy;
-                ans += x + " " + y + " ";
+                long x = Abs(xs[i] - xs[i + K - 1]);
+                long left = x + Abs(xs[i]);
+                long right = x + Abs(xs[i + K - 1]);
+                long res = Min(left, right);
+                ChMin(ref ans, res);
             }
 
             Console.WriteLine(ans);
         }
 
+        public static void B()
+        {
+            long H = rl;
+            long W = rl;
+            string[] table = new string[H];
+            for (int i = 0; i < H; i++)
+            {
+                table[i] = ReadString();
+            }
+
+            bool[] row = new bool[H];
+            bool[] col = new bool[W];
+            for (int i = 0; i < H; i++)
+            {
+                for (int j = 0; j < W; j++)
+                {
+                    if(table[i][j] == '#')
+                    {
+                        row[i] = true;
+                        col[j] = true;
+                    }
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < H; i++)
+            {
+                if (!row[i])
+                    continue;
+
+                for (int j = 0; j < W; j++)
+                {
+                    if (col[j])
+                        sb.Append(table[i][j]);
+                }
+                sb.AppendLine();
+            }
+
+            Write(sb.ToString());
+        }
+
         public static void A()
         {
-            long K = rl;
-            long even = K / 2;
-            long odd = K - even;
-            Console.WriteLine(even * odd);
-        }        
+            long N = rl;
+            long i = rl;
+
+            Console.WriteLine(N + 1 - i);
+        }
     }
 }
 

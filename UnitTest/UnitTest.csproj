@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ABC107\ABC107.csproj" />
     <ProjectReference Include="..\ABC108\ABC108.csproj" />
     <ProjectReference Include="..\DPMatome\DPMatome.csproj" />
   </ItemGroup>
