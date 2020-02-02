@@ -12,10 +12,10 @@ using System.Collections;
 using Pair = System.Tuple<long, long>;
 
 /// <summary>
-/// https://atcoder.jp/contests/abc105
-/// 2020/02/02 unrated
+/// https://atcoder.jp/contests/abc103
+/// 2020/02/02 3完 R762
 /// </summary>
-namespace ABC105
+namespace ABC103
 {
     public class Program
     {
@@ -25,111 +25,166 @@ namespace ABC105
 
             // 1回目
             // A(); 8m
-            // B(); 13m
-            // C(); 74m
-            // D(); // 降参 -> 4m
+            // B(); 17m
+            // C(); 50m
+            // D(); 降参
 
             // 2回目
             // A(); 1m
-            // B(); 4m
-            // C(); 8m
-            // D(); 14m
+            // B(); 3m
+            // C(); 5m
+            // D(); 9m
         }
 
         public static void D()
         {
             long N = rl;
             long M = rl;
-            long[] A = rla;
-
-            long[] S = new long[N+1];
-            for (int i = 0; i < N; i++)
+            Pair[] P = new Pair[M];
+            for (int i = 0; i < M; i++)
             {
-                S[i + 1] = S[i] + A[i];
-            }
-            for (int i = 0; i <= N; i++)
-            {
-                S[i] %= M;
+                P[i] = new Pair(rl, rl);
             }
 
-            Dictionary<long, long> dict = new Dictionary<long, long>();
-            for (int i = 0; i <= N; i++)
-            {
-                if (dict.ContainsKey(S[i]))
-                {
-                    dict[S[i]]++;
-                }
-                else
-                {
-                    dict[S[i]] = 1;
-                }
-            }
+            P = P.OrderBy(p => p.Item2).ToArray();
 
             long ans = 0;
-            foreach(var n in dict.Values)
+            long right = 0;
+
+            foreach(var p in P)
             {
-                ans += n * (n - 1) / 2;
+                if (right <= p.Item1)
+                {
+                    ans++;
+                    right = p.Item2;
+                }
             }
 
             Console.WriteLine(ans);
+
         }
 
         public static void C()
         {
             long N = rl;
+            long[] A = rla;
 
-            if (N == 0)
+            long ans = 0;
+            foreach(var a in A)
             {
-                Console.WriteLine("0");
-                return;
+                ans += a - 1;
             }
 
-            string ans = string.Empty;
-            while (N != 0)
-            {
-                long r = N % -2;
-                if (r < 0) r += 2;
-                N = (N - r) / -2;
-
-                ans += r.ToString();
-            }
-
-            Console.WriteLine(string.Concat(ans.Reverse()));
+            Console.WriteLine(ans);
         }
 
         public static void B()
         {
-            long N = rl;
+            string S = ReadString();
+            string T = ReadString();
 
-            for (int i = 0; i <= N/4; i++)
+            bool ok = true;
+            int len = S.Length;
+            for (int i = 0; i < S.Length; i++)
             {
-                for (int j = 0; j <= N/7; j++)
+                ok = true;
+                for (int j = 0; j < S.Length; j++)
                 {
-                    if(i*4+j*7 == N)
+                    if(T[j] != S[(j+i) % len])
                     {
-                        Console.WriteLine("Yes");
-                        return;
+                        ok = false;
+                        break;
                     }
                 }
+
+                if (ok)
+                    break;
             }
 
-            Console.WriteLine("No");
+            Console.WriteLine(ok ? "Yes" : "No");
         }
 
         public static void A()
         {
-            long N = rl;
-            long K = rl;
-
-            if (N % K == 0)
-            {
-                Console.WriteLine("0");
-            }
-            else
-            {
-                Console.WriteLine("1");
-            }
+            long[] A = rla;
+            Sort(A);
+            Console.WriteLine(A[2]-A[0]);
         }
+
+        //public static void D()
+        //{
+        //    long N = rl;
+        //    long M = rl;
+        //    Pair[] A = new Pair[M];
+        //    for (int i = 0; i < M; i++)
+        //    {
+        //        var l = rl;
+        //        var r = rl;
+        //        A[i] = new Pair(l, r);
+        //    }
+
+        //    A = A.OrderBy(p => p.Item2).ToArray();
+
+        //    long ans = 0;
+        //    long right = 0;
+        //    for (int i = 0; i < M; i++)
+        //    {
+        //        if(right <= A[i].Item1)
+        //        {
+        //            right = A[i].Item2;
+        //            ans++;
+        //        }
+        //    }
+
+        //    Console.WriteLine(ans);
+        //}
+
+        //public static void C()
+        //{
+        //    int N = ReadInt();
+        //    int[] A = ReadIntArray();
+
+        //    long ans = 0;
+        //    for (int i = 0; i < N; i++)
+        //    {
+        //        ans += A[i] - 1;
+        //    }
+
+        //    Console.WriteLine(ans);
+        //}
+
+        //public static void B()
+        //{
+        //    string S = ReadString();
+        //    string T = ReadString();
+
+        //    int len = S.Length;
+        //    bool ok = true;
+        //    for (int i = 0; i < S.Length; i++)
+        //    {
+        //        ok = true;
+        //        for (int j = 0; j < S.Length; j++)
+        //        {
+        //            if (T[j] != S[(j + i) % len])
+        //            {
+        //                ok = false;
+        //                break;
+        //            }
+        //        }
+
+        //        if (ok)
+        //            break;
+        //    }
+
+        //    Console.WriteLine(ok ? "Yes" : "No");
+        //}
+
+        //public static void A()
+        //{
+        //    long[] A = rla;
+        //    Sort(A);
+        //    Console.WriteLine(A[2] - A[0]);
+        //}
     }
 }
 
@@ -271,11 +326,6 @@ namespace Ha2ne2Util
     {
         // 10^17
         public static readonly long INF = (long)1e17;
-
-        public static string ToString(this IEnumerable<char> chars)
-        {
-            return string.Concat(chars);
-        }
 
         public static IEnumerable<int> Range(int end)
         {

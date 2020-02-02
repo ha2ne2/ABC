@@ -12,10 +12,10 @@ using System.Collections;
 using Pair = System.Tuple<long, long>;
 
 /// <summary>
-/// https://atcoder.jp/contests/abc105
-/// 2020/02/02 unrated
+/// https://atcoder.jp/contests/abc104
+/// 2020/02/02 3完 R1457
 /// </summary>
-namespace ABC105
+namespace ABC104
 {
     public class Program
     {
@@ -24,110 +24,174 @@ namespace ABC105
             A();
 
             // 1回目
-            // A(); 8m
-            // B(); 13m
-            // C(); 74m
-            // D(); // 降参 -> 4m
+            // A(); 4m
+            // B(); 29m
+            // C(); 70m
+            // D(); 降参
 
             // 2回目
             // A(); 1m
-            // B(); 4m
-            // C(); 8m
-            // D(); 14m
+            // B(); 7m
+            // C(); 28m
+            // D(); 35m
         }
 
         public static void D()
         {
-            long N = rl;
-            long M = rl;
-            long[] A = rla;
+            string S = ReadString();
+            long[,] dp = new long[S.Length + 1, 4];
+            dp[0, 0] = 1;
 
-            long[] S = new long[N+1];
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < S.Length; i++)
             {
-                S[i + 1] = S[i] + A[i];
-            }
-            for (int i = 0; i <= N; i++)
-            {
-                S[i] %= M;
-            }
-
-            Dictionary<long, long> dict = new Dictionary<long, long>();
-            for (int i = 0; i <= N; i++)
-            {
-                if (dict.ContainsKey(S[i]))
+                for (int j = 0; j < 4; j++)
                 {
-                    dict[S[i]]++;
+                    if (S[i] == '?')
+                    {
+                        dp[i + 1, j] = ModMul(dp[i, j], 3);
+                    }
+                    else
+                    {
+                        dp[i + 1, j] = dp[i, j];
+                    }
                 }
-                else
-                {
-                    dict[S[i]] = 1;
-                }
+
+                if (S[i] == 'A' || S[i] == '?')
+                    dp[i + 1, 1] = ModAdd(dp[i + 1, 1], dp[i, 0]);
+                if (S[i] == 'B' || S[i] == '?')
+                    dp[i + 1, 2] = ModAdd(dp[i + 1, 2], dp[i, 1]);
+                if (S[i] == 'C' || S[i] == '?')
+                    dp[i + 1, 3] = ModAdd(dp[i + 1, 3], dp[i, 2]);
             }
 
-            long ans = 0;
-            foreach(var n in dict.Values)
+            Console.WriteLine(dp[S.Length, 3]);
+        }
+
+        public static void C()
+        {
+            int D = ReadInt();
+            long G = rl;
+            long[] P, C;
+            ReadArrays(out P, out C, D);
+
+            long ans = INF;
+
+            int maxBit = 1 << D;
+            for (int i = 0; i < maxBit; i++)
             {
-                ans += n * (n - 1) / 2;
+                long score = 0;
+                long count = 0;
+
+                for (int j = 0; j < D; j++)
+                {
+                    if ((i & (1 << j)) == (1 << j))
+                    {
+                        score += (j + 1) * 100 * P[j] + C[j];
+                        count += P[j];
+                    }
+                }
+
+                if (score >= G)
+                {
+                    ChMin(ref ans, count);
+                    continue;
+                }
+
+                int next = D - 1;
+                while (next >= 0 && (i & (1 << next)) == (1 << next))
+                {
+                    next--;
+                }
+                if (next == -1) continue;
+
+                var nokori = G - score;
+                long problemScore = (next + 1) * 100;
+                long maxScore = problemScore * P[next];
+                if (maxScore < nokori)
+                {
+                    continue;
+                }
+                count += nokori / problemScore;
+                if (nokori % problemScore != 0)
+                    count++;
+
+                ChMin(ref ans, count);
             }
 
             Console.WriteLine(ans);
         }
 
-        public static void C()
+        public static void B()
         {
-            long N = rl;
+            string S = ReadString();
 
-            if (N == 0)
+            string komoji = "abcdefghijklmnopqrstuvwxyz";
+            HashSet<char> komojiSet = new HashSet<char>();
+            foreach (var c in komoji)
             {
-                Console.WriteLine("0");
+                komojiSet.Add(c);
+            }
+
+            if (S[0] != 'A')
+            {
+                Console.WriteLine("WA");
                 return;
             }
 
-            string ans = string.Empty;
-            while (N != 0)
+            if (!komojiSet.Contains(S[1]))
             {
-                long r = N % -2;
-                if (r < 0) r += 2;
-                N = (N - r) / -2;
-
-                ans += r.ToString();
+                Console.WriteLine("WA");
+                return;
             }
 
-            Console.WriteLine(string.Concat(ans.Reverse()));
-        }
-
-        public static void B()
-        {
-            long N = rl;
-
-            for (int i = 0; i <= N/4; i++)
+            bool foundC = false;
+            for (int i = 2; i < S.Length-1; i++)
             {
-                for (int j = 0; j <= N/7; j++)
+                if(S[i] == 'C' && foundC == false)
                 {
-                    if(i*4+j*7 == N)
-                    {
-                        Console.WriteLine("Yes");
-                        return;
-                    }
+                    foundC = true;
+                }
+                else if (komojiSet.Contains(S[i]))
+                {
+                    // nop
+                }
+                else
+                {
+                    Console.WriteLine("WA");
+                    return;
                 }
             }
 
-            Console.WriteLine("No");
+            if (!foundC)
+            {
+                Console.WriteLine("WA");
+                return;
+            }
+
+            if (!komojiSet.Contains(S[S.Length - 1]))
+            {
+                Console.WriteLine("WA");
+                return;
+            }
+
+            Console.WriteLine("AC");
         }
 
         public static void A()
         {
-            long N = rl;
-            long K = rl;
+            long R = rl;
 
-            if (N % K == 0)
+            if (R < 1200)
             {
-                Console.WriteLine("0");
+                Console.WriteLine("ABC");
+            }
+            else if (R < 2800)
+            {
+                Console.WriteLine("ARC");
             }
             else
             {
-                Console.WriteLine("1");
+                Console.WriteLine("AGC");
             }
         }
     }
@@ -271,11 +335,6 @@ namespace Ha2ne2Util
     {
         // 10^17
         public static readonly long INF = (long)1e17;
-
-        public static string ToString(this IEnumerable<char> chars)
-        {
-            return string.Concat(chars);
-        }
 
         public static IEnumerable<int> Range(int end)
         {
