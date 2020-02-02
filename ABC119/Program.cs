@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 using static ABC119.Util;
 using static System.Console;
 
-#if DEBUG
-using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
-
 namespace ABC119
 {
     class Program
@@ -174,28 +169,6 @@ namespace ABC119
             }
         }
     }
-
-#if DEBUG
-    [TestClass]
-    public class Test
-    {
-        public static StreamReader StringToStreamReader(string s)
-        {
-            byte[] byteArray = Encoding.ASCII.GetBytes(s);
-            MemoryStream stream = new MemoryStream(byteArray);
-            StreamReader reader = new StreamReader(stream);
-            return reader;
-        }
-
-        [TestMethod]
-        public void Test1()
-        {
-            string input = "Testing 1-2-3";
-            System.Console.SetIn(StringToStreamReader(input));
-        }
-    }
-
-#endif
 
     #region ToolBox
 
@@ -363,25 +336,6 @@ namespace ABC119
 
             return left;
         }
-
-#if DEBUG
-        static void SampleGenerator()
-        {
-            int A = 1000;
-            int B = 1000;
-            int Q = 1000;
-
-            Random r = new Random();
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("{0} {1} {2}", A, B, Q));
-            A.Times(a => sb.AppendLine(((long)r.Next() * r.Next()).ToString()));
-            B.Times(b => sb.AppendLine(((long)r.Next() * r.Next()).ToString()));
-            Q.Times(q => sb.AppendLine(((long)r.Next() * r.Next()).ToString()));
-
-            Debug.WriteLine(sb.ToString());
-        }
-#endif
-
     }
 
     /// <summary>

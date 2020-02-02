@@ -12,76 +12,174 @@ using System.Collections;
 using Pair = System.Tuple<long, long>;
 
 /// <summary>
-/// https://atcoder.jp/contests/abc106
-/// 2020/02/01 3完 パフォ1050
+/// https://atcoder.jp/contests/abc105
+/// 2020/02/02
 /// </summary>
-namespace ABC106
+namespace ABC105
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            // A(); 4m
-            // B(); 9m
-            // C(); 28m
-            D();
+            // A(); 8m
+            // B(); 13m
+            // C(); 74m
+            C();
+            // D(); // 降参 -> 4m
         }
 
         public static void D()
         {
+            long N = rl;
+            long M = rl;
+            long[] A = rla;
 
+            long[] S = new long[N + 1];
+            S[0] = 0;
+            for (int i = 0; i < N; i++)
+            {
+                S[i + 1] = S[i] + A[i];
+            }
+
+            var dict = new Dictionary<long, long>();
+            for (int i = 0; i <= N; i++)
+            {
+                var key = S[i] % M;
+                if (dict.ContainsKey(key))
+                {
+                    dict[key]++;
+                }
+                else
+                {
+                    dict[key] = 1;
+                }
+            }
+
+            long ans = 0;
+            foreach(var cnt in dict.Values)
+            {
+                ans += cnt * (cnt - 1) / 2;
+            }
+
+            Console.WriteLine(ans);
         }
 
         public static void C()
         {
-            string S = ReadString();
-            long K = rl;
+            long N = rl;
+            string ans = string.Empty;
 
-            for (int i = 0; i < K; i++)
+            while(N != 0)
             {
-                if (S[i] != '1')
-                {
-                    Console.WriteLine(S[i]);
-                    return;
-                }
+                long r = N % 2;
+                if (r < 0) r += 2;
+                N = N / 2;
+                ans += r.ToString();
             }
 
-            Console.WriteLine(1);
+            ans = string.Concat(ans.Reverse());
+            if (ans == string.Empty)
+                ans = "0";
+            Console.WriteLine(ans);
+        }
+
+        public static void C2()
+        {
+            long N = rl;
+
+            int[] ans = new int[10000];
+
+            long maxIndex = 0;
+            Action<long> rec = null;
+            rec = (x) =>
+            {
+                if (x == 0)
+                {
+                    return;
+                }
+                else if (x > 0)
+                {
+                    long acc = 0;
+                    for (int i = 0; true; i++)
+                    {
+                        long tmp = (long)Pow(4, i);
+                        acc += tmp;
+
+                        if (x <= acc)
+                        {
+                            ChMax(ref maxIndex, i * 2);
+                            ans[i * 2] = 1;
+                            rec(x - tmp);
+                            break;
+                        }
+                    }
+                }
+                else if (x < 0)
+                {
+                    long acc = 0;
+                    for (int i = 1; true; i++)
+                    {
+                        long tmp = (long)Pow(4, i) / -2;
+                        acc += tmp;
+
+                        if (x >= acc)
+                        {
+                            ChMax(ref maxIndex, i * 2 - 1);
+                            ans[i * 2 - 1] = 1;
+                            rec(x - tmp);
+                            break;
+                        }
+                    }
+                }
+            };
+
+            rec(N);
+
+            string answer = string.Empty;
+            for (int i = 0; i <= maxIndex; i++)
+            {
+                answer += ans[i].ToString();
+            }
+
+            Console.WriteLine(string.Concat(answer.Reverse()));
         }
 
         public static void B()
         {
             long N = rl;
-            long[] res = new long[N+1];
-            for (int i = 1; i <= N; i += 2)
+
+            string ans = "No";
+
+            for (int i = 0; i <= N / 4; i++)
             {
-                long divisor = 1;
-                for (int j = 3; j <= i; j++)
+                for (int j = 0; j <= N / 7; j++)
                 {
-                    if (i % j == 0)
-                        divisor++;
+                    long res = i * 4 + j * 7;
+                    if (res == N)
+                    {
+                        ans = "Yes";
+                        goto BIG_BREAK;
+                    }
+                    else if(res > N)
+                    {
+                        break;
+                    }
                 }
-
-                res[i] = divisor;
             }
 
-            long ans = 0;
-            foreach (var div in res)
-            {
-                if (div == 8)
-                    ans++;
-            }
-
+        BIG_BREAK:
             Console.WriteLine(ans);
         }
 
         public static void A()
         {
-            long A = rl;
-            long B = rl;
+            long N = rl;
+            long K = rl;
 
-            long ans = A * B - A - B + 1;
-            Console.WriteLine(ans);
+            if (N % K == 0)
+                Console.WriteLine(0);
+            else
+                Console.WriteLine(1);
         }
     }
 }

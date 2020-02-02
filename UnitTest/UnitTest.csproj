@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ABC105\ABC105.csproj" />
     <ProjectReference Include="..\ABC106\ABC106.csproj" />
     <ProjectReference Include="..\ABC107\ABC107.csproj" />
     <ProjectReference Include="..\ABC108\ABC108.csproj" />
