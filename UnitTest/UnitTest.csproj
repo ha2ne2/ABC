@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ABC100\ABC100.csproj" />
+    <ProjectReference Include="..\ABC101\ABC101.csproj" />
     <ProjectReference Include="..\ABC102\ABC102.csproj" />
     <ProjectReference Include="..\ABC103\ABC103.csproj" />
     <ProjectReference Include="..\ABC104\ABC104.csproj" />
