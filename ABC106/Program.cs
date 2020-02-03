@@ -21,15 +21,59 @@ namespace ABC106
     {
         public static void Main(string[] args)
         {
+            DontAutoFlush();
+
             // A(); 4m
             // B(); 9m
             // C(); 28m
-            D();
+            // D(); 降参
+
+            // 2回目
+            // A(); 1m
+            // B(); 5m
+            // C(); 7m
+            // D(); 16m
+
+            Flush();
         }
 
         public static void D()
         {
+            long N = rl;
+            long M = rl;
+            long Q = rl;
+            long[,] table = new long[N, N];
+            for (int i = 0; i < M; i++)
+            {
+                table[rl - 1, rl - 1]++;
+            }
 
+            long[,] S = new long[N, N];
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    S[i, j] = table[i, j];
+                    if (i > 0) S[i, j] += S[i - 1, j];
+                    if (j > 0) S[i, j] += S[i, j - 1];
+                    if (i > 0 && j > 0) S[i, j] -= S[i - 1, j - 1];
+                }
+            }
+
+            for (int i = 0; i < Q; i++)
+            {
+                long left = rl - 1;
+                long right = rl - 1;
+
+                long x1 = right, y1 = right;
+                long x2 = left, y2 = left;
+
+                long ans = S[x1, y1];
+                if (x2 > 0) ans -= S[x2 - 1, y1];
+                if (y2 > 0) ans -= S[x1, y2 - 1];
+                if (x2 > 0 && y2 > 0) ans += S[x2 - 1, y2 - 1];
+                Console.WriteLine(ans);
+            }
         }
 
         public static void C()
@@ -45,30 +89,24 @@ namespace ABC106
                     return;
                 }
             }
-
-            Console.WriteLine(1);
+            Console.WriteLine("1");
         }
 
         public static void B()
         {
             long N = rl;
-            long[] res = new long[N+1];
-            for (int i = 1; i <= N; i += 2)
-            {
-                long divisor = 1;
-                for (int j = 3; j <= i; j++)
-                {
-                    if (i % j == 0)
-                        divisor++;
-                }
-
-                res[i] = divisor;
-            }
 
             long ans = 0;
-            foreach (var div in res)
+            for (int i = 1; i <= N; i += 2)
             {
-                if (div == 8)
+                long cnt = 0;
+                for (int j = 1; j <= N; j++)
+                {
+                    if (i % j == 0)
+                        cnt++;
+                }
+
+                if (cnt == 8)
                     ans++;
             }
 
@@ -77,11 +115,7 @@ namespace ABC106
 
         public static void A()
         {
-            long A = rl;
-            long B = rl;
-
-            long ans = A * B - A - B + 1;
-            Console.WriteLine(ans);
+            Console.WriteLine((rl - 1) * (rl - 1));
         }
     }
 }
@@ -114,6 +148,7 @@ namespace Ha2ne2Util
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
+        public static string rs = ReadString();
 
         public static long ReadLong()
         {
@@ -479,7 +514,7 @@ namespace Ha2ne2Util
             if (a > b) a = b;
         }
 
-        public readonly static int MOD = 1000000007;
+        public readonly static long MOD = (long)1e9 + 7;
         public static long ModAdd(long a, long b)
         {
             long res = a + b;
