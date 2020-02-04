@@ -22,6 +22,8 @@
     <ProjectReference Include="..\ABC106\ABC106.csproj" />
     <ProjectReference Include="..\ABC107\ABC107.csproj" />
     <ProjectReference Include="..\ABC108\ABC108.csproj" />
+    <ProjectReference Include="..\ABC129\ABC129.csproj" />
+    <ProjectReference Include="..\ABC130\ABC130.csproj" />
     <ProjectReference Include="..\DPMatome\DPMatome.csproj" />
   </ItemGroup>
 
