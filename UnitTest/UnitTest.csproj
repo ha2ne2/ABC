@@ -24,6 +24,16 @@
     <ProjectReference Include="..\ABC108\ABC108.csproj" />
     <ProjectReference Include="..\ABC129\ABC129.csproj" />
     <ProjectReference Include="..\ABC130\ABC130.csproj" />
+    <ProjectReference Include="..\ABC131\ABC131.csproj" />
+    <ProjectReference Include="..\ABC132\ABC132.csproj" />
+    <ProjectReference Include="..\ABC133\ABC133.csproj" />
+    <ProjectReference Include="..\ABC134\ABC134.csproj" />
+    <ProjectReference Include="..\ABC135\ABC135.csproj" />
+    <ProjectReference Include="..\ABC136\ABC136.csproj" />
+    <ProjectReference Include="..\ABC137\ABC137.csproj" />
+    <ProjectReference Include="..\ABC138\ABC138.csproj" />
+    <ProjectReference Include="..\ABC139\ABC139.csproj" />
+    <ProjectReference Include="..\ABC140\ABC140.csproj" />
     <ProjectReference Include="..\DPMatome\DPMatome.csproj" />
   </ItemGroup>
 

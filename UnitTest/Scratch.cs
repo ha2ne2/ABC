@@ -8,7 +8,7 @@ using System.IO;
 /// 2.namespaceをテスト対象と同じにする
 /// 3.テストコード貼り付け
 /// </summary>
-namespace UnitTest
+namespace Scratch
 {
 
 }
