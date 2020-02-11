@@ -21,14 +21,22 @@ namespace ABC130
     {
         public static void Main(string[] args)
         {
+            // 1回目 R1022
             // A();  3m
             // B(); 14m
             // C(); 37m
             // D(); 99m
             // E();
             // F();
-        }
 
+            // 2回目 R1461
+            // A();  1m
+            // B();  7m WA1
+            // C(); 11m
+            // D(); 27m
+            // E();
+            // F();
+        }
         public static void F()
         {
 
@@ -44,28 +52,23 @@ namespace ABC130
             long N = rl;
             long K = rl;
             long[] A = rla;
-
             long sum = 0;
-            int cnt = 0;
+            long r = 0;
             long ans = 0;
-            for (int i = 0; i < N; i++)
+            for (int l = 0; l < N; l++)
             {
-                sum += A[i];
-                cnt++;
-                if (sum < K)
+                while(sum < K)
                 {
-                    ans += cnt;
-                    continue;
+                    if (r == N) break;
+                    sum += A[r];
+                    r++;
                 }
-                while (K <= sum && 0 < cnt)
-                {
-                    sum -= A[i - cnt + 1];
-                    cnt--;
-                }
-                ans += cnt;
+
+                if (sum < K) break;
+                ans += N - r + 1;
+                sum -= A[l];
             }
 
-            ans = N * (N + 1) / 2 - ans;
             Console.WriteLine(ans);
         }
 
@@ -75,49 +78,139 @@ namespace ABC130
             long H = rl;
             long x = rl;
             long y = rl;
-
-            string ans = (W * H / 2.0).ToString() + " ";
-            if (W / 2.0 == x && H / 2.0 == y)
-            {
-                ans += "1";
-            }
-            else
-            {
-                ans += "0";
-            }
-
+            string hukusuu = (x * 2 == W) && (y * 2 == H) ? "1" : "0";
+            string ans = (W * H / 2.0).ToString() + " " + hukusuu;
             Console.WriteLine(ans);
         }
 
         public static void B()
         {
             long N = rl;
-            long M = rl;
+            long X = rl;
             long[] A = rla;
 
-            long l = 0;
+            long[] S = new long[N + 1];
             for (int i = 0; i < N; i++)
             {
-                l += A[i];
-                if (l > M)
-                {
-                    Console.WriteLine(i+1);
-                    return;
-                }
+                S[i + 1] = S[i] + A[i];
             }
 
-            Console.WriteLine(N+1);
+            long ans = 0;
+            for (int i = 0; i < N+1; i++)
+            {
+                if (S[i] <= X)
+                    ans++;
+                else
+                    break;
+            }
+
+            Console.WriteLine(ans);
         }
 
         public static void A()
         {
             long X = rl;
             long A = rl;
-            if(X < A)
+
+            if (X < A)
+            {
                 Console.WriteLine("0");
+            }
             else
+            {
                 Console.WriteLine("10");
+            }
         }
+
+        //public static void F()
+        //{
+
+        //}
+
+        //public static void E()
+        //{
+
+        //}
+
+        //public static void D()
+        //{
+        //    long N = rl;
+        //    long K = rl;
+        //    long[] A = rla;
+
+        //    long sum = 0;
+        //    int cnt = 0;
+        //    long ans = 0;
+        //    for (int i = 0; i < N; i++)
+        //    {
+        //        sum += A[i];
+        //        cnt++;
+        //        if (sum < K)
+        //        {
+        //            ans += cnt;
+        //            continue;
+        //        }
+        //        while (K <= sum && 0 < cnt)
+        //        {
+        //            sum -= A[i - cnt + 1];
+        //            cnt--;
+        //        }
+        //        ans += cnt;
+        //    }
+
+        //    ans = N * (N + 1) / 2 - ans;
+        //    Console.WriteLine(ans);
+        //}
+
+        //public static void C()
+        //{
+        //    long W = rl;
+        //    long H = rl;
+        //    long x = rl;
+        //    long y = rl;
+
+        //    string ans = (W * H / 2.0).ToString() + " ";
+        //    if (W / 2.0 == x && H / 2.0 == y)
+        //    {
+        //        ans += "1";
+        //    }
+        //    else
+        //    {
+        //        ans += "0";
+        //    }
+
+        //    Console.WriteLine(ans);
+        //}
+
+        //public static void B()
+        //{
+        //    long N = rl;
+        //    long M = rl;
+        //    long[] A = rla;
+
+        //    long l = 0;
+        //    for (int i = 0; i < N; i++)
+        //    {
+        //        l += A[i];
+        //        if (l > M)
+        //        {
+        //            Console.WriteLine(i+1);
+        //            return;
+        //        }
+        //    }
+
+        //    Console.WriteLine(N+1);
+        //}
+
+        //public static void A()
+        //{
+        //    long X = rl;
+        //    long A = rl;
+        //    if(X < A)
+        //        Console.WriteLine("0");
+        //    else
+        //        Console.WriteLine("10");
+        //}
     }
 }
 
@@ -149,6 +242,7 @@ namespace Ha2ne2Util
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
+        public static string rs => ReadString();
 
         public static long ReadLong()
         {

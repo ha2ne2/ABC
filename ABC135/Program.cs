@@ -89,6 +89,7 @@ namespace Ha2ne2Util
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
+        public static string rs => ReadString();
 
         public static long ReadLong()
         {

@@ -34,7 +34,9 @@
     <ProjectReference Include="..\ABC138\ABC138.csproj" />
     <ProjectReference Include="..\ABC139\ABC139.csproj" />
     <ProjectReference Include="..\ABC140\ABC140.csproj" />
+    <ProjectReference Include="..\ABC154\ABC154.csproj" />
     <ProjectReference Include="..\DPMatome\DPMatome.csproj" />
+    <ProjectReference Include="..\Scratch\Scratch.csproj" />
   </ItemGroup>
 
 </Project>

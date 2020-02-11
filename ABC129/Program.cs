@@ -21,81 +21,119 @@ namespace ABC129
     {
         public static void Main(string[] args)
         {
+            // 1回目 R1305
             // A();  2m
             // B();  7m
             // C(); 19m
             // D(); 54m
-            E();
+            // E();
+            // F();
+
+            // 2回目 R1915
+            // A();  2m
+            // B();  6m
+            // C(); 13m
+            // D(); 39m (26m -> 6m)
+            // E(); 49m
             // F();
         }
 
         public static void F()
         {
-
         }
-
         public static void E()
         {
+            string L = rs;
+            long N = L.Length;
+            long[,] dp = new long[N+1, 2];
+            dp[0, 1] = 1;
+            for (int i = 0; i < N; i++)
+            {
+                dp[i + 1, 0] = ModMul(dp[i, 0], 3);
 
+                if(L[i] == '0')
+                {
+                    dp[i + 1, 1] = dp[i, 1];
+                }
+                else
+                {
+                    dp[i + 1, 0] = ModAdd(dp[i + 1, 0], dp[i, 1]);
+                    dp[i + 1, 1] = ModMul(dp[i, 1], 2);
+                }
+            }
+
+            long ans = ModAdd(dp[N, 0], dp[N, 1]);
+            Console.WriteLine(ans);
         }
 
         public static void D()
         {
             long H = rl;
             long W = rl;
-            string[] A = new string[H];
+            string[] table = new string[H];
             for (int i = 0; i < H; i++)
             {
-                A[i] = ReadString();
+                table[i] = rs;
             }
 
-            // 横方向の下準備
-            long[,] yoko = new long[H, W];
-            for (int i = 0; i < H; i++)
-            {
-                string s = A[i];
-                for (int j = 0; j < W; j++)
-                {
-                    int count = 0;
-                    while (j + count < W && s[j + count] != '#')
-                    {
-                        count++;
-                    }
-                    for (int k = j; k < j + count; k++)
-                    {
-                        yoko[i, k] = count;
-                    }
+            long[,] up = new long[H, W];
+            long[,] down = new long[H, W];
+            long[,] left = new long[H, W];
+            long[,] right = new long[H, W];
 
-                    j = j + count;
-                }
-            }
-
-            // 縦方向の下準備
-            long[,] tate = new long[H, W];
             for (int w = 0; w < W; w++)
             {
                 for (int h = 0; h < H; h++)
                 {
-                    int count = 0;
-                    while (h + count < H && A[h + count][w] != '#')
-                    {
-                        count++;
-                    }
-                    for (int k = h; k < h + count; k++)
-                    {
-                        tate[k, w] = count;
-                    }
+                    if(table[h][w] == '#')
+                        up[h, w] = 0;
+                    else if (h == 0)
+                        up[h, w] = 1;
+                    else
+                        up[h, w] = up[h - 1, w] + 1;
+                }
 
-                    h = h + count;
+                for (int h = (int)H-1; h >= 0; h--)
+                {
+                    if (table[h][w] == '#')
+                        down[h, w] = 0;
+                    else if (h == H - 1)
+                        down[h, w] = 1;
+                    else
+                        down[h, w] = down[h + 1, w] + 1;
                 }
             }
 
-            long ans = 0;
             for (int h = 0; h < H; h++)
             {
                 for (int w = 0; w < W; w++)
                 {
-                    ChMax(ref ans,tate[h, w] + yoko[h, w] - 1);
+                    if (table[h][w] == '#')
+                        left[h, w] = 0;
+                    else if (w == 0)
+                        left[h, w] = 1;
+                    else
+                        left[h, w] = left[h, w - 1] + 1;
+                }
+
+                for (int w = (int)W - 1; w >= 0; w--)
+                {
+                    if (table[h][w] == '#')
+                        right[h, w] = 0;
+                    else if (w == W - 1)
+                        right[h, w] = 1;
+                    else
+                        right[h, w] = right[h, w + 1] + 1;
+                }
+            }
+
+            long ans = -INF;
+            for (int h = 0; h < H; h++)
+            {
+                for (int w = 0; w < W; w++)
+                {
+                    long res = up[h, w] + down[h, w] + left[h, w] + right[h, w] - 3;
+                    ChMax(ref ans, res);
                 }
             }
 
@@ -106,21 +144,20 @@ namespace ABC129
         {
             long N = rl;
             long M = rl;
-            bool[] A = new bool[N];
+            bool[] ng = new bool[N];
             for (int i = 0; i < M; i++)
             {
-                A[rl] = true;
+                ng[rl] = true;
             }
 
-            long[] dp = new long[N + 1];
+            long[] dp = new long[N + 2];
             dp[0] = 1;
             for (int i = 0; i < N; i++)
             {
-                if (A[i] == true)
+                if (ng[i])
                     continue;
-                dp[i + 1] = ModAdd(dp[i + 1], dp[i]);
-                if (i + 2 <= N)
-                    dp[i + 2] = dp[i];
+                ChModAdd(ref dp[i + 1], dp[i]);
+                ChModAdd(ref dp[i + 2], dp[i]);
             }
 
             Console.WriteLine(dp[N]);
@@ -130,26 +167,26 @@ namespace ABC129
         {
             long N = rl;
             long[] A = rla;
-            long[] S = new long[N + 1];
+            long[] S = new long[N+1];
             for (int i = 0; i < N; i++)
             {
                 S[i + 1] = S[i] + A[i];
             }
-            long ans = INF;
 
+            long min = INF;
             for (int i = 1; i < N; i++)
             {
-                ChMin(ref ans, Abs(S[i] * 2 - S[N]));
+                ChMin(ref min, Abs(S[i] * 2 - S[N]));
             }
 
-            Console.WriteLine(ans);
+            Console.WriteLine(min);
         }
-
         public static void A()
         {
             long[] A = rla;
             Sort(A);
-            Console.WriteLine(A.Take(2).Sum());
+
+            Console.WriteLine(A[0] + A[1]);
         }
     }
 }
@@ -182,6 +219,7 @@ namespace Ha2ne2Util
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
+        public static string rs => ReadString();
 
         public static long ReadLong()
         {
@@ -563,9 +601,16 @@ namespace Ha2ne2Util
             return res;
         }
 
-        public static void ModAddEqual(ref long a, long b)
+        public static void ChModAdd(ref long a, long b)
         {
             a += b;
+            if (a >= MOD)
+                a %= MOD;
+        }
+
+        public static void ChModMul(ref long a, long b)
+        {
+            a *= b;
             if (a >= MOD)
                 a %= MOD;
         }

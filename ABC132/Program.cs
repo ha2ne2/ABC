@@ -10,10 +10,12 @@ using static System.Console;
 using static System.Math;
 using System.Collections;
 using Pair = System.Tuple<long, long>;
+using Graph = System.Collections.Generic.List<System.Collections.Generic.List<long>>;
+using Ha2ne2Util;
 
 /// <summary>
 /// https://atcoder.jp/contests/abc132
-///
+/// 2020/02/07
 /// </summary>
 namespace ABC132
 {
@@ -21,12 +23,22 @@ namespace ABC132
     {
         public static void Main(string[] args)
         {
-            // A();
-            // B();
-            // C();
-            // D();
+            // 1回目 R902
+            // A();  5m
+            // B();  9m
+            // C(); 16m
+            // D(); 降参
             // E();
             // F();
+
+            // 2回目 R2157
+            // A();  2m
+            // B();  4m
+            // C();  8m
+            // D(); 15m
+            // E(); 29m
+            // F();
+
         }
 
         public static void F()
@@ -36,28 +48,242 @@ namespace ABC132
 
         public static void E()
         {
+            long N = rl;
+            long M = rl;
+            Graph g = new Graph();
+            for (int i = 0; i < N; i++)
+            {
+                g.Add(new List<long>());
+            }
+            for (int i = 0; i < M; i++)
+            {
+                g[(int)rl - 1].Add(rl - 1);
+            }
+            long S = rl - 1;
+            long T = rl - 1;
 
+            long[,] dist = new long[N, 3];
+            FillArray(dist, -1);
+            dist[S, 0] = 0;
+            Queue<Pair> que = new Queue<Pair>();
+            que.Enqueue(new Pair(S, 0));
+
+            while (que.Any())
+            {
+                var p = que.Dequeue();
+                foreach(var nv in g[(int)p.Item1])
+                {
+                    long np = (p.Item2 + 1) % 3;
+                    if(dist[nv,np] == -1)
+                    {
+                        dist[nv, np] = dist[p.Item1, p.Item2] + 1;
+                        que.Enqueue(new Pair(nv, np));
+                    }
+                }
+            }
+
+            if(dist[T,0] == -1)
+            {
+                Console.WriteLine("-1");
+            }
+            else
+            {
+                Console.WriteLine(dist[T, 0] / 3);
+            }
         }
 
         public static void D()
         {
+            long COM_MAX = 2001;
+            long[,] com = new long[COM_MAX, COM_MAX];
+            com[0, 0] = 1;
+            for (int i = 1; i < COM_MAX; i++)
+            {
+                com[i, 0] = 1;
+                for (int j = 1; j <= i; j++)
+                {
+                    com[i, j] = ModAdd(com[i - 1, j - 1], com[i - 1, j]);
+                }
+            }
 
+            long N = rl;
+            long K = rl;
+            for (int i = 1; i <= K; i++)
+            {
+                long ans = ModMul(com[N - K + 1, i], com[K - 1, i - 1]);
+                Console.WriteLine(ans);
+            }
         }
 
         public static void C()
         {
-
+            long N = rl;
+            long[] A = rla;
+            Sort(A);
+            Console.WriteLine(A[N / 2] - A[N / 2 - 1]);
         }
 
         public static void B()
         {
+            long N = rl;
+            long[] A = rla;
 
+            long ans = 0;
+            for (int i = 1; i < N-1; i++)
+            {
+                if ((A[i - 1] < A[i] && A[i] < A[i + 1])
+                    || (A[i - 1] > A[i] && A[i] > A[i + 1]))
+                    ans++;
+            }
+
+            Console.WriteLine(ans);
         }
 
         public static void A()
         {
-
+            string S = rs;
+            if ((S[0] == S[1] && S[2] == S[3] && S[0] != S[2])
+                 || (S[0] == S[2] && S[1] == S[3] && S[0] != S[1])
+                 || (S[0] == S[3] && S[1] == S[2] && S[0] != S[1]))
+                Console.WriteLine("Yes");
+            else
+                Console.WriteLine("No");
         }
+
+        //public static void F()
+        //{
+
+        //}
+
+        //public static void E()
+        //{
+        //    long N = rl;
+        //    long M = rl;
+
+        //    List<List<long>> G = new List<List<long>>();
+        //    for (int i = 0; i < N; i++)
+        //    {
+        //        G.Add(new List<long>());
+        //    }
+        //    for (int i = 0; i < M; i++)
+        //    {
+        //        G[(int)rl-1].Add(rl-1);
+        //    }
+
+        //    long S = rl-1;
+        //    long T = rl-1;
+
+        //    long[,] dist = new long[N, 3];
+        //    FillArray(dist, -1);
+        //    dist[S, 0] = 0;
+        //    Queue<Pair> que = new Queue<Pair>();
+        //    que.Enqueue(new Pair(S, 0));
+        //    while (que.Any())
+        //    {
+        //        var p = que.Dequeue();
+        //        foreach(var nv in G[(int)p.Item1])
+        //        {
+        //            int np = ((int)p.Item2 + 1) % 3;
+        //            if (dist[nv, np] == -1)
+        //            {
+        //                dist[nv, np] = dist[p.Item1, p.Item2] + 1;
+        //                que.Enqueue(new Pair(nv, np));
+        //            }
+        //        }
+        //    }
+
+        //    if (dist[T,0] == -1)
+        //    {
+        //        Console.WriteLine(-1);
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine(dist[T, 0] / 3);
+        //    }
+        //}
+
+        //public static void D()
+        //{
+        //    long MAX_C = 2001;
+        //    long[,] com = new long[MAX_C, MAX_C];
+        //    com[0, 0] = 1;
+        //    for (int i = 1; i < MAX_C; i++)
+        //    {
+        //        com[i, 0] = 1;
+        //        for (int j = 1; j <= i; j++)
+        //        {
+        //            com[i, j] = ModAdd(com[i - 1, j - 1], com[i - 1, j]);
+        //        }
+        //    }
+
+        //    long N = rl;
+        //    long K = rl;
+
+        //    for (int i = 1; i <= K; i++)
+        //    {
+        //        Console.WriteLine(ModMul(com[N - K + 1, i], com[K - 1, i - 1]));
+        //    }
+        //}
+
+        //public static void C()
+        //{
+        //    long N = rl;
+        //    long[] A = rla;
+        //    Sort(A);
+
+        //    if (N % 2 == 1)
+        //    {
+        //        Console.WriteLine(0);
+        //        return;
+        //    }
+
+        //    long mid = N / 2;
+        //    if (A[mid-1] == A[mid])
+        //    {
+        //        Console.WriteLine(0);
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine(A[mid]-A[mid-1]);
+        //    }
+        //}
+
+        //public static void B()
+        //{
+        //    long N = rl;
+        //    long[] A = rla;
+
+        //    long ans = 0;
+        //    for (int i = 1; i < N-1; i++)
+        //    {
+        //        if ((A[i - 1] < A[i] && A[i] < A[i + 1])
+        //            || (A[i - 1] > A[i] && A[i] > A[i + 1]))
+        //            ans++;
+        //    }
+
+        //    Console.WriteLine(ans);
+        //}
+
+        //public static void A()
+        //{
+        //    string s = rs;
+        //    HashMap<char, long> hm = new HashMap<char, long>();
+        //    foreach(var c in s)
+        //    {
+        //        hm[c]++;
+        //    }
+
+        //    foreach(var key in hm.Keys)
+        //    {
+        //        if (hm[key] != 2)
+        //        {
+        //            Console.WriteLine("No");
+        //            return;
+        //        }
+        //    }
+
+        //    Console.WriteLine("Yes");
+        //}
     }
 }
 
@@ -89,6 +315,7 @@ namespace Ha2ne2Util
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
+        public static string rs => ReadString();
 
         public static long ReadLong()
         {
@@ -551,6 +778,26 @@ namespace Ha2ne2Util
         }
 
     }
+
+    public class HashMap<K, V> : Dictionary<K, V>
+    {
+        private V DefaltValue;
+        public HashMap() { }
+        public HashMap(V defaultValue)
+        {
+            DefaltValue = defaultValue;
+        }
+        new public V this[K i]
+        {
+            get
+            {
+                V v;
+                return TryGetValue(i, out v) ? v : base[i] = DefaltValue;
+            }
+            set { base[i] = value; }
+        }
+    }
+
 
     /// <summary>
     /// HashSetにTupleを入れた時の、等値性判定方法の指定に使います。
