@@ -11,6 +11,7 @@ using static System.Math;
 using System.Collections;
 using Pair = System.Tuple<long, long>;
 using Ha2ne2Util;
+using System.Linq.Expressions;
 
 /// <summary>
 /// 色々テスト用
@@ -238,30 +239,6 @@ namespace Ha2ne2Util
             Console.Out.Flush();
         }
 
-        public static IEnumerable<int> Range(int end)
-        {
-            for (int i = 0; i < end; i++)
-            {
-                yield return i;
-            }
-        }
-
-        public static IEnumerable<int> Range(int from, int end)
-        {
-            for (int i = from; i < end; i++)
-            {
-                yield return i;
-            }
-        }
-
-        public static IEnumerable<int> Range(int from, int end, int step)
-        {
-            for (int i = from; i < end; i += step)
-            {
-                yield return i;
-            }
-        }
-
         /// <summary>
         /// ソートをして結果を返します。
         /// 破壊的関数です。
@@ -302,119 +279,9 @@ namespace Ha2ne2Util
             b = _a;
         }
 
-        /// <summary>
-        /// 先頭と末尾に要素を増やした新しい配列を返します。
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <returns></returns>
-        public static T[] AddHeadAndTail<T>(T[] array)
-        {
-            int len = array.Length;
-            T[] res = new T[len + 2];
-            Array.Copy(array, 0, res, 1, len);
-            return res;
-        }
-
-        /// <summary>
-        /// 昇順ソート済みの配列を2分探索します。
-        /// 要素が見つからなかった場合はnより大きい数値の中で最小の数値のインデックスを返す。
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        public static int BinarySearch(long[] array, long n)
-        {
-            int left = 0;
-            int right = array.Length - 1;
-
-            while (left <= right)
-            {
-                int mid = (right - left) / 2 + left;
-
-                if (array[mid] == n)
-                {
-                    return mid;
-                }
-                else if (n < array[mid])
-                {
-                    right = mid - 1;
-                }
-                else
-                {
-                    left = mid + 1;
-                }
-            }
-
-            return left;
-        }
-
         public static int GCD(int a, int b)
         {
             return (b == 0) ? a : GCD(b, a % b);
-        }
-
-        /// <summary>
-        /// nの約数の配列を返します。
-        /// 配列は昇順ソートされています。
-        /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        public static int[] GetDivisor(int n)
-        {
-            double sqrt = Math.Sqrt(n);
-
-            List<int> divisor = new List<int>();
-
-            for (int i = 1; i <= sqrt; i++)
-            {
-                if (n % i == 0)
-                {
-                    divisor.Add(i);
-                    int d = n / i;
-                    if (d != i)
-                    {
-                        divisor.Add(d);
-                    }
-                }
-            }
-
-            return Sort(divisor.ToArray());
-        }
-
-        public static void Deconstruct<T>(this T[] items, out T t0)
-        {
-            t0 = items.Length > 0 ? items[0] : default(T);
-        }
-
-        public static void Deconstruct<T>(this T[] items, out T t0, out T t1)
-        {
-            if (items.Length < 2)
-                throw new ArgumentException();
-
-            t0 = items[0];
-            t1 = items[1];
-        }
-
-        public static void Deconstruct<T>(this T[] items, out T t0, out T t1, out T t2)
-        {
-            if (items.Length < 3)
-                throw new ArgumentException();
-
-            t0 = items[0];
-            t1 = items[1];
-            t2 = items[2];
-        }
-
-        public static void Deconstruct<T>(this T[] items, out T t0, out T t1, out T t2, out T t3)
-        {
-            if (items.Length < 4)
-                throw new ArgumentException();
-
-            t0 = items[0];
-            t1 = items[1];
-            t2 = items[2];
-            t3 = items[3];
         }
 
         public static void ChMax(ref long a, long b)
@@ -455,38 +322,6 @@ namespace Ha2ne2Util
             a *= b;
             if (a >= MOD)
                 a %= MOD;
-        }
-
-        public static T MinBy<T>(this IEnumerable<T> source, Func<T, long> conv)
-        {
-            T min = source.First();
-            long minValue = long.MaxValue;
-            foreach (T x in source)
-            {
-                long n = conv(x);
-                if (n < minValue)
-                {
-                    min = x;
-                }
-            }
-
-            return min;
-        }
-
-        public static T MaxBy<T>(this IEnumerable<T> source, Func<T, long> conv)
-        {
-            T min = source.First();
-            long maxValue = long.MinValue;
-            foreach (T x in source)
-            {
-                long n = conv(x);
-                if (maxValue < n)
-                {
-                    min = x;
-                }
-            }
-
-            return min;
         }
 
         public static void FillArray<T>(T[] array, T value)
@@ -545,6 +380,7 @@ namespace Ha2ne2Util
             }
             return acc;
         }
+
         public static double[] Accumulate(double[] array)
         {
             double[] acc = new double[array.Length + 1];
@@ -589,218 +425,30 @@ namespace Ha2ne2Util
 
     public class HashMap<K, V> : Dictionary<K, V>
     {
-        private V DefaltValue;
+        private V DefaultValue;
+        private static Func<V> CreateInstance =
+            Expression.Lambda<Func<V>>(Expression.New(typeof(V))).Compile();
+
         public HashMap() { }
         public HashMap(V defaultValue)
         {
-            DefaltValue = defaultValue;
+            DefaultValue = defaultValue;
         }
         new public V this[K i]
         {
             get
             {
                 V v;
-                return TryGetValue(i, out v) ? v : base[i] = DefaltValue;
+                if (TryGetValue(i, out v))
+                {
+                    return v;
+                }
+                else
+                {
+                    return base[i] = DefaultValue != null ? DefaultValue : CreateInstance();
+                }
             }
             set { base[i] = value; }
-        }
-    }
-
-    /// <summary>
-    /// UnionFindTree
-    /// </summary>
-    public class UnionFindTree
-    {
-        public int[] Node;
-
-        public UnionFindTree(int N)
-        {
-            Node = new int[N];
-            for (int i = 0; i < N; i++)
-            {
-                Node[i] = -1;
-            }
-        }
-
-        public bool IsSameGroup(int x, int y)
-        {
-            return GetRoot(x) == GetRoot(y);
-        }
-
-        public bool Merge(int x, int y)
-        {
-            int xr = GetRoot(x);
-            int yr = GetRoot(y);
-
-            if (xr == yr)
-                return false;
-
-            // xが、大きなグループを示すようにSwapする（値が小さい方が大きなグループ）
-            if (Node[xr] > Node[yr])
-                Swap(ref xr, ref yr);
-
-            // グループの数を合算する
-            Node[xr] += Node[yr];
-
-            // 根を張り替える
-            Node[yr] = xr;
-            return true;
-        }
-
-        public int Size(int x)
-        {
-            return -Node[GetRoot(x)];
-        }
-
-        public int GetRoot(int n)
-        {
-            if (Node[n] < 0)
-            {
-                return n;
-            }
-            else
-            {
-                // 根を張りなおす。
-                Node[n] = GetRoot(Node[n]);
-                return Node[n];
-            }
-        }
-    }
-
-    /// <summary>
-    /// PriorityQueue
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class PriorityQueue<T>
-    {
-        private Comparison<T> _comparison = null;
-        private int _type = 0;
-
-        private T[] _heap;
-        private int _sz = 0;
-
-        private int _count = 0;
-
-        /// <summary>
-        /// Priority queue
-        /// </summary>
-        /// <param name="maxSize">max size</param>
-        /// <param name="type">0: asc, 1:desc</param>
-        public PriorityQueue(int maxSize, int type = 0)
-        {
-            _heap = new T[maxSize];
-            _type = type;
-        }
-
-        public PriorityQueue(int maxSize, Comparison<T> comparison)
-        {
-            _heap = new T[maxSize];
-            _comparison = comparison;
-        }
-
-        private int Compare(T x, T y)
-        {
-            return _comparison(x, y);
-            //if (_comparison != null) return _comparison(x, y);
-            //return _type == 0 ? x.CompareTo(y) : y.CompareTo(x);
-        }
-
-        public void Push(T x)
-        {
-            _count++;
-
-            //node number
-            var i = _sz++;
-
-            while (i > 0)
-            {
-                //parent node number
-                var p = (i - 1) / 2;
-
-                if (Compare(_heap[p], x) <= 0) break;
-
-                _heap[i] = _heap[p];
-                i = p;
-            }
-
-            _heap[i] = x;
-        }
-
-        public T Pop()
-        {
-            _count--;
-
-            T ret = _heap[0];
-            T x = _heap[--_sz];
-
-            int i = 0;
-            while (i * 2 + 1 < _sz)
-            {
-                //children
-                int a = i * 2 + 1;
-                int b = i * 2 + 2;
-
-                if (b < _sz && Compare(_heap[b], _heap[a]) < 0) a = b;
-
-                if (Compare(_heap[a], x) >= 0) break;
-
-                _heap[i] = _heap[a];
-                i = a;
-            }
-
-            _heap[i] = x;
-
-            return ret;
-        }
-
-        public int Count()
-        {
-            return _count;
-        }
-
-        public T Peek()
-        {
-            return _heap[0];
-        }
-
-        public bool Contains(T x)
-        {
-            for (int i = 0; i < _sz; i++) if (x.Equals(_heap[i])) return true;
-            return false;
-        }
-
-        public void Clear()
-        {
-            while (this.Count() > 0) this.Pop();
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            var ret = new List<T>();
-
-            while (this.Count() > 0)
-            {
-                ret.Add(this.Pop());
-            }
-
-            foreach (var r in ret)
-            {
-                this.Push(r);
-                yield return r;
-            }
-        }
-
-        public T[] ToArray()
-        {
-            T[] array = new T[_sz];
-            int i = 0;
-
-            foreach (var r in this)
-            {
-                array[i++] = r;
-            }
-
-            return array;
         }
     }
 }
