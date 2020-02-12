@@ -13,7 +13,7 @@ using Pair = System.Tuple<long, long>;
 
 /// <summary>
 /// https://atcoder.jp/contests/abc134
-///
+///　2020/02/11
 /// </summary>
 namespace ABC134
 {
@@ -21,12 +21,16 @@ namespace ABC134
     {
         public static void Main(string[] args)
         {
-            // A();
-            // B();
-            // C();
-            // D();
+            DontAutoFlush();
+
+            // A();  2m
+            // B();  5m
+            // C(); 14m
+            D();
             // E();
             // F();
+
+            Flush();
         }
 
         public static void F()
@@ -41,22 +45,108 @@ namespace ABC134
 
         public static void D()
         {
+            long N = rl;
+            long[] A = rla;
+            long[] ans = new long[N];
+            long count1 = 0;
+            for (int i = A.Length - 1; i >= 0; i--)
+            {
+                long cnt = 0;
+                long i2 = i + 1;
+                long ni = i2;
+                while (ni <= N)
+                {
+                    if (ans[ni - 1] == 1)
+                        cnt++;
+                    ni += i2;
+                }
 
+                if (A[i] == 1)
+                {
+                    if (cnt % 2 == 0)
+                    {
+                        ans[i] = 1;
+                        count1++;
+                    }
+                }
+                else
+                {
+                    if (cnt % 2 == 1)
+                    {
+                        ans[i] = 1;
+                        count1++;
+                    }
+                }
+            }
+
+            Console.WriteLine(count1);
+            for (int i = 0; i < N; i++)
+            {
+                if(ans[i] == 1)
+                {
+                    Console.Write(i+1 + " ");
+                }
+            }
         }
 
         public static void C()
         {
+            long N = rl;
+            long[] A = new long[N];
+            for (int i = 0; i < N; i++)
+            {
+                A[i] = rl;
+            }
 
+            long max = 0;
+            long max2 = 0;
+            for (int i = 0; i < N; i++)
+            {
+                if (max <= A[i])
+                {
+                    max2 = max;
+                    max = A[i];
+                }
+                else if(max2 < A[i])
+                {
+                    max2 = A[i];
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < N; i++)
+            {
+                if(A[i] == max)
+                {
+                    sb.AppendLine(max2.ToString());
+                }
+                else
+                {
+                    sb.AppendLine(max.ToString());
+                }
+            }
+
+            Console.Write(sb.ToString());
         }
 
         public static void B()
         {
+            long N = rl;
+            long D = rl * 2 + 1;
 
+            long ans = N / D;
+            if(N % D != 0)
+            {
+                ans++;
+            }
+
+            Console.WriteLine(ans);
         }
 
         public static void A()
         {
-
+            long r = rl;
+            Console.WriteLine(r*r*3);
         }
     }
 }
@@ -65,31 +155,18 @@ namespace Ha2ne2Util
 {
     public static class Cin
     {
-        private static string[] Tokens { get; set; }
-
-        private static int Pointer { get; set; }
-
-        public static string Next()
-        {
-            if (Tokens == null || Tokens.Length <= Pointer)
-            {
-                Tokens = Console.ReadLine().Split(' ');
-                Pointer = 0;
-            }
-
-            return Tokens[Pointer++];
-        }
-
-        public static int ReadInt()
-        {
-            return int.Parse(Next());
-        }
+        #region public
 
         public static long rl => ReadLong();
         public static long[] rla => ReadLongArray();
         public static double rd => ReadDouble();
         public static double[] rda => ReadDoubleArray();
         public static string rs => ReadString();
+
+        public static int ReadInt()
+        {
+            return int.Parse(Next());
+        }
 
         public static long ReadLong()
         {
@@ -99,6 +176,11 @@ namespace Ha2ne2Util
         public static double ReadDouble()
         {
             return double.Parse(Next());
+        }
+
+        public static string ReadString()
+        {
+            return Next();
         }
 
         public static int[] ReadIntArray()
@@ -119,7 +201,7 @@ namespace Ha2ne2Util
             return Array.ConvertAll(Console.ReadLine().Split(' '), double.Parse);
         }
 
-        public static void ReadArrays(out long[] a, out long[] b, long N)
+        public static void ReadCols(out long[] a, out long[] b, long N)
         {
             a = new long[N];
             b = new long[N];
@@ -130,7 +212,7 @@ namespace Ha2ne2Util
             }
         }
 
-        public static void ReadArrays(out long[] a, out long[] b, out long[] c, long N)
+        public static void ReadCols(out long[] a, out long[] b, out long[] c, long N)
         {
             a = new long[N];
             b = new long[N];
@@ -167,30 +249,27 @@ namespace Ha2ne2Util
             return ret;
         }
 
-        public static string ReadString()
+        #endregion
+
+        #region private
+
+        private static string[] Tokens { get; set; }
+
+        private static int Pointer { get; set; }
+
+        public static string Next()
         {
-            return Next();
+            if (Tokens == null || Tokens.Length <= Pointer)
+            {
+                Tokens = Console.ReadLine().Split(' ');
+                Pointer = 0;
+            }
+
+            return Tokens[Pointer++];
         }
 
-        /// <summary>
-        /// "00101001010"という様な入力をintの配列にして返す
-        /// </summary>
-        /// <returns></returns>
-        public static int[] ReadIntArrayFromBinaryString()
-        {
-            Tokens = null;
-            return Array.ConvertAll(Console.ReadLine().ToArray(), c => int.Parse(c.ToString()));
-        }
+        #endregion
 
-        /// <summary>
-        /// "00101001010"という様な入力をboolの配列にして返す
-        /// </summary>
-        /// <returns></returns>
-        public static bool[] ReadBoolArrayFromBinaryString()
-        {
-            Tokens = null;
-            return Console.ReadLine().Select(c => c == '1').ToArray();
-        }
     }
 
     /// <summary>
@@ -200,6 +279,23 @@ namespace Ha2ne2Util
     {
         // 10^17
         public static readonly long INF = (long)1e17;
+
+        // 10^9 + 7
+        public readonly static long MOD = (long)1e9 + 7;
+
+        /// <summary>
+        /// Console.WriteLineの自動フラッシュをしないようにする
+        /// </summary>
+        public static void DontAutoFlush()
+        {
+            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            Console.SetOut(sw);
+        }
+
+        public static void Flush()
+        {
+            Console.Out.Flush();
+        }
 
         public static IEnumerable<int> Range(int end)
         {
@@ -253,20 +349,6 @@ namespace Ha2ne2Util
         }
 
         /// <summary>
-        /// Rubyにあるようなやつ
-        /// ex) 5.Times(i => Console.WriteLine(i));
-        /// </summary>
-        /// <param name="times"></param>
-        /// <param name="action"></param>
-        public static void Times(this int times, Action<int> action)
-        {
-            for (int i = 0; i < times; i++)
-            {
-                action(i);
-            }
-        }
-
-        /// <summary>
         /// 引数aと引数bの値を入れ替えます
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -277,20 +359,6 @@ namespace Ha2ne2Util
             T _a = a;
             a = b;
             b = _a;
-        }
-
-        /// <summary>
-        /// Console.WriteLineの自動フラッシュをしないようにする
-        /// </summary>
-        public static void DontAutoFlush()
-        {
-            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
-            Console.SetOut(sw);
-        }
-
-        public static void Flush()
-        {
-            Console.Out.Flush();
         }
 
         /// <summary>
@@ -345,6 +413,12 @@ namespace Ha2ne2Util
             return (b == 0) ? a : GCD(b, a % b);
         }
 
+        /// <summary>
+        /// nの約数の配列を返します。
+        /// 配列は昇順ソートされています。
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static int[] GetDivisor(int n)
         {
             double sqrt = Math.Sqrt(n);
@@ -356,44 +430,15 @@ namespace Ha2ne2Util
                 if (n % i == 0)
                 {
                     divisor.Add(i);
-                    int tmp = n / i;
-                    if (tmp != i)
+                    int d = n / i;
+                    if (d != i)
                     {
-                        divisor.Add(tmp);
+                        divisor.Add(d);
                     }
                 }
             }
 
             return Sort(divisor.ToArray());
-        }
-
-        public static int[] LongToBinaryArray(long n)
-        {
-            List<int> lst = new List<int>();
-
-            while (n > 0)
-            {
-                int amari = (int)(n % 2);
-                lst.Add(amari);
-                n /= 2;
-            }
-
-            return lst.ToArray();
-        }
-
-        public static long BinaryArrayToLong(int[] binaryArray)
-        {
-            long result = 0;
-            long b = 1;
-            int len = binaryArray.Length;
-
-            for (int i = 0; i < len; i++)
-            {
-                result += binaryArray[i] * b;
-                b *= 2;
-            }
-
-            return result;
         }
 
         public static void Deconstruct<T>(this T[] items, out T t0)
@@ -431,20 +476,6 @@ namespace Ha2ne2Util
             t3 = items[3];
         }
 
-        public static void ArrayInitialize<T>(T[,] array, T value)
-        {
-            int len0 = array.GetLength(0);
-            int len1 = array.GetLength(1);
-
-            for (int i = 0; i < len0; i++)
-            {
-                for (int j = 0; j < len1; j++)
-                {
-                    array[i, j] = value;
-                }
-            }
-        }
-
         public static void ChMax(ref long a, long b)
         {
             if (a < b) a = b;
@@ -455,7 +486,6 @@ namespace Ha2ne2Util
             if (a > b) a = b;
         }
 
-        public readonly static int MOD = 1000000007;
         public static long ModAdd(long a, long b)
         {
             long res = a + b;
@@ -463,6 +493,7 @@ namespace Ha2ne2Util
                 return res % MOD;
             return res;
         }
+
         public static long ModMul(long a, long b)
         {
             long res = a * b;
@@ -471,9 +502,16 @@ namespace Ha2ne2Util
             return res;
         }
 
-        public static void ModAddEqual(ref long a, long b)
+        public static void ChModAdd(ref long a, long b)
         {
             a += b;
+            if (a >= MOD)
+                a %= MOD;
+        }
+
+        public static void ChModMul(ref long a, long b)
+        {
+            a *= b;
             if (a >= MOD)
                 a %= MOD;
         }
@@ -481,8 +519,8 @@ namespace Ha2ne2Util
         public static T MinBy<T>(this IEnumerable<T> source, Func<T, long> conv)
         {
             T min = source.First();
-            long minValue = conv(min);
-            foreach (T x in source.Skip(1))
+            long minValue = long.MaxValue;
+            foreach (T x in source)
             {
                 long n = conv(x);
                 if (n < minValue)
@@ -497,8 +535,8 @@ namespace Ha2ne2Util
         public static T MaxBy<T>(this IEnumerable<T> source, Func<T, long> conv)
         {
             T min = source.First();
-            long maxValue = conv(min);
-            foreach (T x in source.Skip(1))
+            long maxValue = long.MinValue;
+            foreach (T x in source)
             {
                 long n = conv(x);
                 if (maxValue < n)
@@ -551,33 +589,79 @@ namespace Ha2ne2Util
             }
         }
 
+        /// <summary>
+        /// 累積和を求めて返します。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static long[] Accumulate(long[] array)
+        {
+            long[] acc = new long[array.Length + 1];
+            for (int i = 0; i < array.Length; i++)
+            {
+                acc[i + 1] = acc[i] + array[i];
+            }
+            return acc;
+        }
+        public static double[] Accumulate(double[] array)
+        {
+            double[] acc = new double[array.Length + 1];
+            for (int i = 0; i < array.Length; i++)
+            {
+                acc[i + 1] = acc[i] + array[i];
+            }
+            return acc;
+        }
+
+        /// <summary>
+        /// めぐる式二分探索
+        /// okにはpredを満たすindexを、ngにはpredを満たさないindexを指定します。
+        /// 引数がng＜okの場合、最小のokとなるindexをokに代入します。(lower_bound）
+        /// 引数がok＜ngの場合、最大のokとなるindexをokに代入します。(upper_bound）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="okIndex"></param>
+        /// <param name="ngIndex"></param>
+        /// <param name="pred"></param>
+        public static void MeguruBinarySearch<T>(
+            T[] array,
+            ref long okIndex,
+            ref long ngIndex,
+            Predicate<T> pred)
+        {
+            while (Math.Abs(okIndex - ngIndex) > 1)
+            {
+                long mid = (okIndex + ngIndex) / 2;
+                if (pred(array[mid]))
+                {
+                    okIndex = mid;
+                }
+                else
+                {
+                    ngIndex = mid;
+                }
+            }
+        }
     }
 
-    /// <summary>
-    /// HashSetにTupleを入れた時の、等値性判定方法の指定に使います。
-    /// HashSetのコンストラクタに渡して使います。
-    /// EqualsとGetHashCodeを提供します。
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class EqualityComparer<T> : IEqualityComparer<T>
+    public class HashMap<K, V> : Dictionary<K, V>
     {
-        private Func<T, T, bool> _equals;
-        private Func<T, int> _getHashCode;
-
-        public EqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode)
+        private V DefaltValue;
+        public HashMap() { }
+        public HashMap(V defaultValue)
         {
-            _equals = equals;
-            _getHashCode = getHashCode;
+            DefaltValue = defaultValue;
         }
-
-        public bool Equals(T x, T y)
+        new public V this[K i]
         {
-            return _equals(x, y);
-        }
-
-        public int GetHashCode(T obj)
-        {
-            return _getHashCode(obj);
+            get
+            {
+                V v;
+                return TryGetValue(i, out v) ? v : base[i] = DefaltValue;
+            }
+            set { base[i] = value; }
         }
     }
 
