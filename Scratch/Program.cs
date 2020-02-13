@@ -21,17 +21,10 @@ namespace Scratch
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            ABC105_A();
-
-            //HashMap<long, long> hm = new HashMap<long, long>();
-            //hm[5]++;
-            //Console.WriteLine(hm[4]);
-            //Console.WriteLine(hm[5]);
-
-            //AGC036_A();
-        }
+        //public static void Main(string[] args)
+        //{
+        //    ABC105_A();
+        //}
 
         public static void ABC105_A()
         {
@@ -87,11 +80,13 @@ namespace Scratch
             long okIndex = -1;
             long ngIndex = A.Length;
 
-            MeguruBinarySearch(A, ref okIndex, ref ngIndex, pred);
+            //MeguruBinarySearch(A, ref okIndex, ref ngIndex, pred);
             Console.WriteLine("{0} {1}", okIndex, ngIndex);
         }
     }
 }
+
+
 
 namespace Ha2ne2Util
 {
@@ -199,7 +194,7 @@ namespace Ha2ne2Util
 
         private static int Pointer { get; set; }
 
-        public static string Next()
+        private static string Next()
         {
             if (Tokens == null || Tokens.Length <= Pointer)
             {
@@ -389,37 +384,6 @@ namespace Ha2ne2Util
                 acc[i + 1] = acc[i] + array[i];
             }
             return acc;
-        }
-
-        /// <summary>
-        /// めぐる式二分探索
-        /// okにはpredを満たすindexを、ngにはpredを満たさないindexを指定します。
-        /// 引数がng＜okの場合、最小のokとなるindexをokに代入します。(lower_bound）
-        /// 引数がok＜ngの場合、最大のokとなるindexをokに代入します。(upper_bound）
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="okIndex"></param>
-        /// <param name="ngIndex"></param>
-        /// <param name="pred"></param>
-        public static void MeguruBinarySearch<T>(
-            T[] array,
-            ref long okIndex,
-            ref long ngIndex,
-            Predicate<T> pred)
-        {
-            while (Math.Abs(okIndex - ngIndex) > 1)
-            {
-                long mid = (okIndex + ngIndex) / 2;
-                if (pred(array[mid]))
-                {
-                    okIndex = mid;
-                }
-                else
-                {
-                    ngIndex = mid;
-                }
-            }
         }
     }
 

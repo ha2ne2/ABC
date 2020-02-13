@@ -67,13 +67,10 @@ namespace Lib
             {
                 int l = (i << 1) + 1;
                 int r = l + 1;
-
                 if (r < Size && Compare(Heap[r], Heap[l]) < 0)
                     l = r;
-
                 if (Compare(x, Heap[l]) <= 0)
                     break;
-
                 Heap[i] = Heap[l];
                 i = l;
             }

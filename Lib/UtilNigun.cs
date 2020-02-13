@@ -8,6 +8,37 @@ namespace Lib
     public static class UtilNigun
     {
         /// <summary>
+        /// めぐる式二分探索
+        /// okにはpredを満たすindexを、ngにはpredを満たさないindexを指定します。
+        /// 引数がng＜okの場合、最小のokとなるindexをokに代入します。(lower_bound）
+        /// 引数がok＜ngの場合、最大のokとなるindexをokに代入します。(upper_bound）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="okIndex"></param>
+        /// <param name="ngIndex"></param>
+        /// <param name="pred"></param>
+        public static void MeguruBinarySearch<T>(
+            T[] array,
+            ref long okIndex,
+            ref long ngIndex,
+            Predicate<T> pred)
+        {
+            while (Math.Abs(okIndex - ngIndex) > 1)
+            {
+                long mid = (okIndex + ngIndex) / 2;
+                if (pred(array[mid]))
+                {
+                    okIndex = mid;
+                }
+                else
+                {
+                    ngIndex = mid;
+                }
+            }
+        }
+
+        /// <summary>
         /// 先頭と末尾に要素を増やした新しい配列を返します。
         /// </summary>
         /// <typeparam name="T"></typeparam>

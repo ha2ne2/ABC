@@ -11,7 +11,7 @@ namespace Lib
         [TestMethod]
         public void EnqueueTest()
         {
-            PriorityQueue<long> pq = new PriorityQueue<long>(Comparer<long>.Default.Compare);
+            PQ<long> pq = new PQ<long>(Comparer<long>.Default.Compare);
             pq.Enqueue(8);
             pq.Enqueue(7);
             pq.Enqueue(6);
@@ -32,7 +32,7 @@ namespace Lib
         [TestMethod]
         public void EnqueueTest2()
         {
-            PriorityQueue<long> pq = new PriorityQueue<long>((x,y) => (int)(y-x));
+            PriorityQueue<long> pq = new PriorityQueue<long>((x, y) => (int)(y - x));
             pq.Enqueue(8);
             pq.Enqueue(7);
             pq.Enqueue(6);
