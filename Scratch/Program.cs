@@ -1,92 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Ha2ne2Util.Cin;
-using static Ha2ne2Util.Util;
-using static System.Console;
-using static System.Math;
-using System.Collections;
-using Pair = System.Tuple<long, long>;
-using Ha2ne2Util;
 using System.Linq.Expressions;
-
-/// <summary>
-/// 色々テスト用
-/// 
-/// </summary>
-namespace Scratch
-{
-    public class Program
-    {
-        //public static void Main(string[] args)
-        //{
-        //    ABC105_A();
-        //}
-
-        public static void ABC105_A()
-        {
-            long Senbei = ReadLong();
-            long Ninzu = ReadLong();
-
-            long amari = Senbei % Ninzu;
-
-            if (amari == 0)
-            {                
-                Console.WriteLine("0");
-            }
-            else
-            {
-                Console.WriteLine("1");
-            }
-        }
-
-        public static void ABC106_A()
-        {
-            long A = ReadLong();
-            long B = ReadLong();
-
-            long C = A + B;
-            if (C <= 10)
-            {
-                Console.WriteLine("Cは10以下です");
-            }
-            else
-            {
-                Console.WriteLine("Cは10以下じゃないです");
-            }
-        }
-
-        public static void AGC036_A()
-        {
-            long S = rl;
-            long v = (long)1e9;
-            long x = (v - S % v) % v;
-            long y = (S + x) / v;
-            string ans = "0 0 1000000000 1 " + x + " " + y;
-            Console.WriteLine(ans);
-        }
-
-        public static void MeguruBinarySearchSample()
-        {
-            int[] A = new int[] { 1, 2, 3, 4, 4, 5, 6, 7 };
-            Predicate<int> pred = (x) =>
-            {
-                return x <= 4;
-            };
-
-            long okIndex = -1;
-            long ngIndex = A.Length;
-
-            //MeguruBinarySearch(A, ref okIndex, ref ngIndex, pred);
-            Console.WriteLine("{0} {1}", okIndex, ngIndex);
-        }
-    }
-}
-
-
 
 namespace Ha2ne2Util
 {
@@ -94,11 +9,11 @@ namespace Ha2ne2Util
     {
         #region public
 
-        public static long rl => ReadLong();
-        public static long[] rla => ReadLongArray();
-        public static double rd => ReadDouble();
-        public static double[] rda => ReadDoubleArray();
-        public static string rs => ReadString();
+        public static long rl { get { return ReadLong(); } }
+        public static long[] rla { get { return ReadLongArray(); } }
+        public static double rd { get { return ReadDouble(); } }
+        public static double[] rda { get { return ReadDoubleArray(); } }
+        public static string rs { get { return ReadString(); } }
 
         public static int ReadInt()
         {
