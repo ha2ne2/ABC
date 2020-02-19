@@ -1,10 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq.Expressions;
 
 namespace Ha2ne2Util
 {
+    public class Program
+    {
+        public static void Main2()
+        {
+            var primes = GetPrimes(123456789);
+            Console.WriteLine(string.Join(' ', primes));
+        }
+
+        public static List<long> GetPrimes(long n)
+        {
+            List<long> primes = new List<long>();
+
+            primes.Add(1);
+
+            if (n % 2 == 0)
+            {
+                primes.Add(2);
+            }
+
+            for (int i = 3; i * i <= n; i += 2)
+            {
+                while (n % i == 0)
+                {
+                    primes.Add(i);
+
+                    n /= i;
+                }
+            }
+            if (n != 1)
+                primes.Add(n);
+
+            return primes;
+        }
+
+    }
+
+
+
     public static class Cin
     {
         #region public
@@ -140,7 +176,7 @@ namespace Ha2ne2Util
         /// </summary>
         public static void DontAutoFlush()
         {
-            var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
+            var sw = new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
         }
 
@@ -306,7 +342,7 @@ namespace Ha2ne2Util
     {
         private V DefaultValue;
         private static Func<V> CreateInstance =
-            Expression.Lambda<Func<V>>(Expression.New(typeof(V))).Compile();
+            System.Linq.Expressions.Expression.Lambda<Func<V>>(System.Linq.Expressions.Expression.New(typeof(V))).Compile();
 
         public HashMap() { }
         public HashMap(V defaultValue)
