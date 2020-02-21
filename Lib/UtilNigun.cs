@@ -206,5 +206,69 @@ namespace Lib
             }
         }
 
+        
+        public static List<long> GetPrimes(long n)
+        {
+            List<long> primes = new List<long>();
+
+            primes.Add(1);
+
+            if (n % 2 == 0)
+            {
+                primes.Add(2);
+            }
+
+            for (long i = 3; i * i <= n; i += 2)
+            {
+                while (n % i == 0)
+                {
+                    primes.Add(i);
+                    n /= i;
+                }
+            }
+            if (n != 1)
+                primes.Add(n);
+
+            return primes;
+        }
+
+        public static void NextPermutation(int[] array)
+        {
+            // a[left] < a[left+1] を満たす最大のleftを探す
+            int left = array.Length - 2;
+            while (array[left] > array[left + 1])
+            {
+                left--;
+                if (left < 0) return;
+            }
+
+            // a[left] < a[right] を満たす最大のrightを探す
+            int leftVal = array[left];
+            int right = array.Length - 1;
+            while (leftVal > array[right])
+            {
+                right--;
+            }
+
+            // 入れ替える
+            Swap(ref array[left], ref array[right]);
+
+            // 後ろを全部入れ替える。入れ替え後は a[left] > a[left+1] < a[left+2] < ... < a[length-1] という不等式が成り立つ。
+            left++;
+            right = array.Length - 1;
+            while (left < right)
+            {
+                Swap(ref array[left], ref array[right]);
+                left++;
+                right--;
+            }
+        }
+
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T tmp = a;
+            a = b;
+            b = tmp;
+        }
     }
 }
