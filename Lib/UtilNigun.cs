@@ -206,7 +206,46 @@ namespace Lib
             }
         }
 
+        public static Dictionary<long,long> PrimeFactorize(long n)
+        {
+            Dictionary<long, long> dic = new Dictionary<long, long>();
+
+            if (n % 2 == 0)
+            {
+                n /= 2;
+                dic[2] = 1;
+                while (n % 2 == 0)
+                {
+                    n /= 2;
+                    dic[2]++;
+                }
+            }
+
+            for (long i = 3; i * i <= n; i+=2)
+            {
+                if (n % i == 0)
+                {
+                    n /= i;
+                    dic[i] = 1;
+                    while (n % i == 0)
+                    {
+                        n /= i;
+                        dic[i]++;
+                    }
+                }
+            }
+
+            if (n != 1)
+                dic[n] = 1;
+
+            return dic;
+        }
         
+        /// <summary>
+        /// nの素因数のリストを返す
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static List<long> GetPrimes(long n)
         {
             List<long> primes = new List<long>();
@@ -269,6 +308,55 @@ namespace Lib
             T tmp = a;
             a = b;
             b = tmp;
+        }
+
+        public static long modinv(long a, long mod)
+        {
+            long b = mod, u = 1, v = 0;
+            while(b != 0)
+            {
+                long t = a / b;
+                a -= t * b;
+                Swap(ref a, ref b);
+                u -= t * v;
+                Swap(ref u, ref v);
+            }
+            u %= mod;
+            if (u < 0) u += mod;
+            return u;
+        }
+
+        public static long modinv2(long a, long mod)
+        {
+            long x, y;
+            ExtGcd(a, mod, out x, out y);
+            x %= mod;
+            if (x < 0) x += mod;
+            return x;
+        }
+
+        /// <summary>
+        /// 返り値: a と b の最大公約数
+        /// ax + by = gcd(a, b) を満たす (x, y) が格納される
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static long ExtGcd(long a, long b, out long x, out long y)
+        {
+            if (b == 0)
+            {
+                x = 1;
+                y = 0;
+                return a;
+            }
+            long d = ExtGcd(b, a % b, out y, out x);
+            Console.WriteLine($"x:{x}, y:{y}");
+            Console.WriteLine($"{y} -= {a}/{b} * {x}");
+            y -= a / b * x;
+            return d;
         }
     }
 }
