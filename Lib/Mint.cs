@@ -22,9 +22,9 @@ namespace Lib
         }
 
         /// <summary>
-        /// 通常のコンストラクタでは、valに対して%オペレータとif文を使って確実にMODを取る。
-        /// 場合によってはより軽量の処理でMODが取れる場合があるため、上記処理を省きたい時がある。
-        /// このメソッドでは引数をMODを取り終えたものとしてMintのインスタンスを作成する。
+        /// 通常のコンストラクタでは、valに対して%オペレータとif文を使って確実に余りを求める。
+        /// しかし場合によってはその値をより軽量の処理で算出出来る場合があるため、上記処理を省きたい時がある。
+        /// このメソッドでは引数を既に余りを求め終えた数としてMintのインスタンスを作成する。
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
@@ -121,7 +121,7 @@ namespace Lib
 
         /// <summary>
         /// 構造体の場合は同値性判断をするEqualsが自動で実装されるが、
-        /// リフレクションを用いた実装のためIEquatableを自分で実装したほうが良い。
+        /// それはリフレクションを用いた実装なのでIEquatableを自分で実装したほうが早い。
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -132,7 +132,7 @@ namespace Lib
 
         int IComparable<Mint>.CompareTo(Mint other)
         {
-            return Comparer<Mint>.Default.Compare(Value, other.Value);
+            return Comparer<long>.Default.Compare(Value, other.Value);
         }
 
         #endregion
