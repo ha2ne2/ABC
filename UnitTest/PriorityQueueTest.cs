@@ -12,6 +12,7 @@ namespace Lib
         public void EnqueueTest()
         {
             PriorityQueue<long> pq = new PriorityQueue<long>(Comparer<long>.Default.Compare);
+            // PQ<long> pq = new PQ<long>();
             pq.Enqueue(8);
             pq.Enqueue(7);
             pq.Enqueue(6);

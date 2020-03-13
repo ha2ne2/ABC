@@ -92,6 +92,32 @@ namespace Lib
         private int Size;
 
         #endregion
-
     }
+
+        // 練習
+    // 3/13 : 20m -> 7m -> 7m -> 10m 
+    public class PQ<T>
+    {
+        List<T> Heap;
+        int Size;
+        Comparison<T> Compare;
+
+        public PQ()
+        {
+        }
+
+        public void Enqueue(T item)
+        {
+
+        }
+
+        public T Dequeue()
+        {
+            return default(T);
+        }
+
+        public int Count { get { return Size; } }
+    }
+
+
 }

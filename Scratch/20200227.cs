@@ -12,7 +12,7 @@ namespace _20200227
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void _Main(string[] args)
         {
             // Abc089_B(); 4m
             // Arc090_A(); 10m
