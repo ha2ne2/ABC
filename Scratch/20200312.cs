@@ -142,7 +142,7 @@ namespace _20200312
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static void _Main(string[] args)
         {
             // Joi2009ho_B(); 37m
             // Arc084_A();    36m

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Pair = Lib.VTuple<long, long>;
 
 namespace Lib
 {
@@ -8,41 +9,50 @@ namespace Lib
     {
         public int N;
         public long[] Costs;
-        public List<List<VTuple<long, int>>> Graph; // first:cost, second:v
+        public HashMap<long, HashMap<long, Pair>> Graph; // first:cost, second:v
         public Dijkstra(int n)
         {
             N = n;
-            Graph = new List<List<VTuple<long, int>>>();
+            Graph = new HashMap<long, HashMap<long, Pair>>();
             for (int i = 0; i < N; i++)
             {
-                Graph.Add(new List<VTuple<long, int>>());
+                Graph[i] = new HashMap<long, Pair>(new Pair(long.MaxValue, -1));
             }
             Costs = new long[N];
         }
 
-        public void AddPath(int from, int to, long cost)
+        /// <summary>
+        /// パスを追加する。
+        /// パスが既に存在する場合、既存のパスより低コストだった場合は更新する。
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="cost"></param>
+        public void AddPath(long from, long to, long cost)
         {
-            Graph[from].Add(new VTuple<long, int>(cost, to));
+            var nv = new Pair(cost, to);
+            if (nv.First < Graph[from][to].First)
+                Graph[from][to] = nv;
         }
 
-        public void Solve(int from)
+        public void Solve(long from)
         {
             Util.FillArray(Costs, long.MaxValue);
             Costs[from] = 0;
-            var pq = new PriorityQueue<VTuple<long, int>>(); // first:cost, second:v
-            pq.Enqueue(new VTuple<long, int>(0, from));
+            var pq = new PriorityQueue<Pair>(); // first:cost, second:v
+            pq.Enqueue(new Pair(0, from));
             while (pq.Any())
             {
                 var v = pq.Dequeue();
                 if (v.First > Costs[v.Second]) continue;
 
-                foreach(var edge in Graph[v.Second])
+                foreach(var edge in Graph[v.Second].Values)
                 {
                     var nCost = Costs[v.Second] + edge.First;
                     if(nCost < Costs[edge.Second])
                     {
                         Costs[edge.Second] = nCost;
-                        pq.Enqueue(new VTuple<long, int>(nCost, edge.Second));
+                        pq.Enqueue(new Pair(nCost, edge.Second));
                     }
                 }
             }
