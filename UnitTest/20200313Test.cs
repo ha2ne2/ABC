@@ -11,6 +11,218 @@ using System.IO;
 namespace _20200313
 {
     [TestClass]
+    public class Agc035_ATest
+    {
+        private void AssertIO(string input, string output)
+        {
+            StringReader reader = new StringReader(input);
+            Console.SetIn(reader);
+
+            StringWriter writer = new StringWriter();
+            Console.SetOut(writer);
+
+            Agc035_A.Main(null);
+
+            Assert.AreEqual(output + Environment.NewLine, writer.ToString());
+        }
+
+        [TestMethod]
+        public void 入力例_1()
+        {
+            string input =
+@"3
+1 2 3";
+            string output =
+@"Yes";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_3()
+        {
+            string input =
+@"6
+1 2 3 3 2 1";
+            string output =
+@"Yes";
+
+            AssertIO(input, output);
+        }
+
+
+        [TestMethod]
+        public void 入力例_2()
+        {
+            string input =
+@"4
+1 2 4 8";
+            string output =
+@"No";
+
+            AssertIO(input, output);
+        }
+
+    }
+
+    [TestClass]
+    public class Sumitb2019_DTest
+    {
+        private void AssertIO(string input, string output)
+        {
+            StringReader reader = new StringReader(input);
+            Console.SetIn(reader);
+
+            StringWriter writer = new StringWriter();
+            Console.SetOut(writer);
+
+            Sumitb2019_D.Main(null);
+
+            Assert.AreEqual(output + Environment.NewLine, writer.ToString());
+        }
+
+        [TestMethod]
+        public void 入力例_1()
+        {
+            string input =
+@"4
+0224";
+            string output =
+@"3";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_2()
+        {
+            string input =
+@"6
+123123";
+            string output =
+@"17";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_3()
+        {
+            string input =
+@"19
+3141592653589793238";
+            string output =
+@"329";
+
+            AssertIO(input, output);
+        }
+
+    }
+
+    [TestClass]
+    public class Keyence2020_BTest
+    {
+        private void AssertIO(string input, string output)
+        {
+            StringReader reader = new StringReader(input);
+            Console.SetIn(reader);
+
+            StringWriter writer = new StringWriter();
+            Console.SetOut(writer);
+
+            Keyence2020_B.Main(null);
+
+            Assert.AreEqual(output + Environment.NewLine, writer.ToString());
+        }
+
+        [TestMethod]
+        public void 入力例_1()
+        {
+            string input =
+@"4
+2 4
+4 3
+9 3
+100 5";
+            string output =
+@"3";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_2()
+        {
+            string input =
+@"2
+8 20
+1 10";
+            string output =
+@"1";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_3()
+        {
+            string input =
+@"5
+10 1
+2 1
+4 1
+6 1
+8 1";
+            string output =
+@"5";
+
+            AssertIO(input, output);
+        }
+
+    }
+
+    [TestClass]
+    public class Abc051_CTest
+    {
+        private void AssertIO(string input, string output)
+        {
+            StringReader reader = new StringReader(input);
+            Console.SetIn(reader);
+
+            StringWriter writer = new StringWriter();
+            Console.SetOut(writer);
+
+            Abc051_C.Main(null);
+
+            Assert.AreEqual(output + Environment.NewLine, writer.ToString());
+        }
+
+        [TestMethod]
+        public void 入力例_1()
+        {
+            string input =
+@"0 0 1 2";
+            string output =
+@"UURDDLLUUURRDRDDDLLU";
+
+            AssertIO(input, output);
+        }
+
+        [TestMethod]
+        public void 入力例_2()
+        {
+            string input =
+@"-2 -2 1 1";
+            string output =
+@"UURRURRDDDLLDLLULUUURRURRDDDLLDL";
+
+            AssertIO(input, output);
+        }
+
+    }
+
+
+    [TestClass]
     public class Joi2008yo_FTest
     {
         private void AssertIO(string input, string output)
@@ -21,7 +233,7 @@ namespace _20200313
             StringWriter writer = new StringWriter();
             Console.SetOut(writer);
 
-            Program.Joi2008yo_F();
+            Joi2008yo_F.Main(null);
 
             Assert.AreEqual(output + Environment.NewLine, writer.ToString());
         }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CopyTemplate": {
+      "commandName": "Project",
+      "commandLineArgs": "ABC000 A B C D E"
+    }
+  }
+}

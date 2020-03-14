@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>_20200313.Abc051_C</StartupObject>
   </PropertyGroup>
 
 </Project>
