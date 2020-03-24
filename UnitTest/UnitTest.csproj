@@ -40,6 +40,7 @@
     <ProjectReference Include="..\ABC158\ABC158.csproj" />
     <ProjectReference Include="..\DPMatome\DPMatome.csproj" />
     <ProjectReference Include="..\Lib\Lib.csproj" />
+    <ProjectReference Include="..\Panasonic2020\Panasonic2020.csproj" />
     <ProjectReference Include="..\Scratch\Scratch.csproj" />
   </ItemGroup>
 
