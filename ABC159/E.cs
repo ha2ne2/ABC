@@ -17,66 +17,65 @@ namespace ABC159
             long H = rl;
             long W = rl;
             long K = rl;
-            long[,] A = new long[H, W];
+            long[,] S = new long[H, W];
             for (int i = 0; i < H; i++)
             {
                 string tmp = rs;
                 for (int j = 0; j < W; j++)
                 {
-                    A[i, j] = tmp[j]-'0';
+                    S[i, j] = tmp[j] - '0';
                 }
             }
 
-            long[,] s = new long[H + 1, W + 1];
-            for (int i = 0; i < H; ++i)
+            long ans = long.MaxValue;
+            long maxBit = 1 << ((int)H - 1);
+            for (int mask = 0; mask < maxBit; mask++)
             {
-                for (int j = 0; j < W; ++j)
+                // horizontal cut
+                long horizontalCut = 0;
+                long[] ord = new long[H];
+                for (int i = 0; i < H - 1; i++)
                 {
-                    s[i + 1, j + 1] = s[i, j + 1] + s[i + 1, j] - s[i, j] + A[i, j];
+                    if((mask & 1 << i) == 1 << i)
+                    {
+                        ord[i + 1] = ord[i] + 1;
+                        horizontalCut++;
+                    }
+                    else
+                    {
+                        ord[i + 1] = ord[i];
+                    }
                 }
+
+                // vertical cut
+                long verticalCut = 0;
+                long[] cont = new long[H];
+                for (int w = 0; w < W; w++)
+                {
+                    bool ok = true;
+                    long[] col = new long[H];
+                    for (int h = 0; h < H; h++)
+                    {
+                        cont[ord[h]] += S[h, w];
+                        col[ord[h]] += S[h, w];
+
+                        if (K < cont[ord[h]]) ok = false;
+                        if (K < col[ord[h]])
+                        {
+                            goto BIG_CONTINUE;
+                        }
+                    }
+                    if (!ok)
+                    {
+                        cont = col;
+                        verticalCut++;
+                    }
+                }
+
+                ChMin(ref ans, horizontalCut + verticalCut);
+            BIG_CONTINUE:;
             }
 
-            var memo = new HashMap<VTuple<int, int, int, int>, int>();
-            Func<int, int, int, int, int> rec = null;
-            rec = (x1, y1, x2, y2) =>
-            {
-                var t = s[x2, y2] - s[x1, y2] - s[x2, y1] + s[x1, y1];
-                if (t <= K)
-                {
-                    return 0;
-                }
-                else
-                {
-                    var key = new VTuple<int, int, int, int>(x1, y1, x2, y2);
-
-                    if (memo.ContainsKey(key))
-                    {
-                        return memo[key];
-                    }
-                    int min = int.MaxValue;
-
-                    // horizontal cut
-                    for (int h = x1 + 1; h < x2; h++)
-                    {
-                        var t1 = rec(x1, y1, h, y2);
-                        var t2 = rec(h, y1, x2, y2);
-                        min = Min(min, t1 + t2 + 1);
-                    }
-
-                    // vertical cut
-                    for (int w = y1 + 1; w < y2; w++)
-                    {
-                        var t1 = rec(x1, y1, x2, w);
-                        var t2 = rec(x1, w, x2, y2);
-                        min = Min(min, t1 + t2 + 1);
-                    }
-
-                    memo[key] = min;
-                    return min;
-                }
-            };
-
-            int ans = rec(0, 0, (int)H, (int)W);
             Console.WriteLine(ans);
         }
 
