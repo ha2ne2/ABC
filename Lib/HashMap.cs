@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lib
 {
-    public class HashMap<K, V> : Dictionary<K, V>
+    public class HashMap<K, V> : System.Collections.Generic.Dictionary<K, V>
     {
         private V DefaultValue;
         private static Func<V> CreateInstance =

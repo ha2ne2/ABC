@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lib
 {
@@ -105,34 +103,14 @@ namespace Lib
             if (a > b) a = b;
         }
 
-        public static long ModAdd(long a, long b)
+        public static void ChMax(ref int a, int b)
         {
-            long res = a + b;
-            if (res >= MOD)
-                return res % MOD;
-            return res;
+            if (a < b) a = b;
         }
 
-        public static long ModMul(long a, long b)
+        public static void ChMin(ref int a, int b)
         {
-            long res = a * b;
-            if (res >= MOD)
-                return res % MOD;
-            return res;
-        }
-
-        public static void ChModAdd(ref long a, long b)
-        {
-            a += b;
-            if (a >= MOD)
-                a %= MOD;
-        }
-
-        public static void ChModMul(ref long a, long b)
-        {
-            a *= b;
-            if (a >= MOD)
-                a %= MOD;
+            if (a > b) a = b;
         }
 
         public static void FillArray<T>(T[] array, T value)

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Lib
 {
-    public struct Mint : IComparable<Mint>,  IEquatable<Mint>
+    public struct Mint : System.IComparable<Mint>, System.IEquatable<Mint>
     {
         public static readonly long MOD = (long)1e9 + 7;
 
@@ -64,7 +62,7 @@ namespace Lib
 
         public override bool Equals(object obj)
         {
-            return obj is Mint mint && Value == mint.Value;
+            return obj is Mint && Value == ((Mint)obj).Value;
         }
 
         public override int GetHashCode()
@@ -125,12 +123,12 @@ namespace Lib
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        bool IEquatable<Mint>.Equals(Mint other)
+        public bool Equals(Mint other)
         {
             return Value == other.Value;
         }
 
-        int IComparable<Mint>.CompareTo(Mint other)
+        public int CompareTo(Mint other)
         {
             return Comparer<long>.Default.Compare(Value, other.Value);
         }
