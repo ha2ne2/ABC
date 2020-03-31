@@ -33,7 +33,7 @@ namespace ABC110
 #endif
         }
 
-        static int MAX = 510000;
+        static int MAX = 1000000;
         static int MOD = 1000000007;
 
         static long[] fac, finv, inv;
@@ -53,6 +53,14 @@ namespace ABC110
                 inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
                 finv[i] = finv[i - 1] * inv[i] % MOD;
             }
+        }
+
+        // 二項係数計算
+        static long nCk(int n, int k)
+        {
+            if (n < k) return 0;
+            if (n < 0 || k < 0) return 0;
+            return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
         }
 
 
