@@ -337,7 +337,8 @@ namespace Lib
 
         /// <summary>
         /// 返り値: a と b の最大公約数
-        /// ax + by = gcd(a, b) を満たす (x, y) が格納される
+        /// ax + by = gcd(a, b) を満たす (x, y) が格納される。
+        /// 再帰実装
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -353,10 +354,49 @@ namespace Lib
                 return a;
             }
             long d = ExtGcd(b, a % b, out y, out x);
-            Console.WriteLine($"x:{x}, y:{y}");
-            Console.WriteLine($"{y} -= {a}/{b} * {x}");
             y -= a / b * x;
             return d;
         }
+
+        /// <summary>
+        /// 拡張ユークリッド互除法
+        /// ax+by=gcd(a,b)を満たすx,yを引数に格納する。
+        /// 戻り値はgcd(a,b)。
+        /// 行列演算による非再帰実装。
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static long ExtGcd2(long a, long b, out long x, out long y)
+        {
+            x = 1;
+            y = 0;
+            long u = 0;
+            long v = 1;
+
+            while (b != 0)
+            {
+                // 行列の累積積
+                long k = a / b;
+                long _x = u;
+                u = x - k * u;
+                x = _x;
+                long _y = v;
+                v = y - k * v;
+                y = _y;
+
+                // 現在の係数（Euclid）
+                long _a = a;
+                a = b;
+                b = _a - (k * b);
+            }
+
+            return a;
+        }
+
+
+
     }
 }

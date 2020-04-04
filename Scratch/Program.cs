@@ -107,7 +107,8 @@ namespace Scratch
         /// <summary>
         /// 拡張ユークリッド互除法
         /// ax+by=gcd(a,b)を満たすx,yを引数に格納する。
-        /// 戻り値はgcd(a,b)
+        /// 戻り値はgcd(a,b)。
+        /// 行列演算による実装
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
