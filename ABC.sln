@@ -124,6 +124,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABC161", "ABC161\ABC161.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Judge-Update-202004", "Judge-Update-202004\Judge-Update-202004.csproj", "{BCA4E31A-377F-4D4A-A002-531B6F7EF1FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABC141", "ABC141\ABC141.csproj", "{836C5A9B-F750-481F-BA17-9BED4AD14BF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -366,6 +368,10 @@ Global
 		{BCA4E31A-377F-4D4A-A002-531B6F7EF1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCA4E31A-377F-4D4A-A002-531B6F7EF1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCA4E31A-377F-4D4A-A002-531B6F7EF1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{836C5A9B-F750-481F-BA17-9BED4AD14BF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836C5A9B-F750-481F-BA17-9BED4AD14BF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836C5A9B-F750-481F-BA17-9BED4AD14BF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836C5A9B-F750-481F-BA17-9BED4AD14BF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
