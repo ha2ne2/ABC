@@ -25,6 +25,10 @@ namespace Lib
         /// </summary>
         public static void DontAutoFlush()
         {
+            // Console.Outが既に差し替えられている場合（e.g 出力テストの為に出力先をStringWriterに差し替えた）は何もしない
+            if (Console.IsOutputRedirected)
+                return;
+
             var sw = new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
             Console.SetOut(sw);
         }

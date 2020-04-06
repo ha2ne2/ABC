@@ -94,30 +94,30 @@ namespace Lib
         #endregion
     }
 
-        // 練習
+    // 練習用
     // 3/13 : 20m -> 7m -> 7m -> 10m 
-    public class PQ<T>
-    {
-        List<T> Heap;
-        int Size;
-        Comparison<T> Compare;
+    //public class PQ<T>
+    //{
+    //    List<T> Heap;
+    //    int Size;
+    //    Comparison<T> Compare;
 
-        public PQ()
-        {
-        }
+    //    public PQ()
+    //    {
+    //    }
 
-        public void Enqueue(T item)
-        {
+    //    public void Enqueue(T item)
+    //    {
 
-        }
+    //    }
 
-        public T Dequeue()
-        {
-            return default(T);
-        }
+    //    public T Dequeue()
+    //    {
+    //        return default(T);
+    //    }
 
-        public int Count { get { return Size; } }
-    }
+    //    public int Count { get { return Size; } }
+    //}
 
 
 }
