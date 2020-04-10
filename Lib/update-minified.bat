@@ -1,1 +1,1 @@
-csmin.lnk Mint.cs HashMap.cs Cin.cs Util.cs >minified.txt
+csmin.lnk Mint.cs HashMap.cs VTuple.cs Cin.cs Util.cs >minified.txt
