@@ -206,6 +206,11 @@ namespace Lib
             }
         }
 
+        /// <summary>
+        /// nを素因数分解し、キーが素数、値が指数のディクショナリを返す
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static Dictionary<long,long> PrimeFactorize(long n)
         {
             Dictionary<long, long> dic = new Dictionary<long, long>();
@@ -250,21 +255,21 @@ namespace Lib
         {
             List<long> primes = new List<long>();
 
-            primes.Add(1);
-
             if (n % 2 == 0)
             {
                 primes.Add(2);
+                while(n % 2 == 0) n /= 2;
             }
 
             for (long i = 3; i * i <= n; i += 2)
             {
-                while (n % i == 0)
+                if (n % i == 0)
                 {
                     primes.Add(i);
-                    n /= i;
+                    while(n % i == 0) n /= i;
                 }
             }
+
             if (n != 1)
                 primes.Add(n);
 

@@ -94,7 +94,7 @@ namespace Lib
             if (a == 0 || b == 0)
                 return 0;
 
-            return a * b / GCD(a, b);
+            return a / GCD(a, b) * b;
         }
 
         public static void ChMax(ref long a, long b)
