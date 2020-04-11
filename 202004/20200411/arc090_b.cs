@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC142.abc142_e.Cin;
-using static ABC142.abc142_e.Util;
-using Pair = ABC142.abc142_e.VTuple<long, long>;
+using static _20200411.arc090_b.Cin;
+using static _20200411.arc090_b.Util;
+using Pair = _20200411.arc090_b.VTuple<long, long>;
 
 /// <summary>
-/// ABC142
-/// E - Get Everything 
-/// https://atcoder.jp/contests/ABC142/tasks/abc142_e
+/// abc087
+/// D - People on a Line
+/// https://atcoder.jp/contests/abc087/tasks/arc090_b
 /// </summary>
-namespace ABC142.abc142_e
+namespace _20200411.arc090_b
 {
     public class Program
     {
@@ -19,37 +19,52 @@ namespace ABC142.abc142_e
         {
             int N = ri;
             int M = ri;
-            int[] A = new int[M];
-            int[] C = new int[M];
-            for (int i = 0; i < M; i++)
+            List<List<Pair>> G = new List<List<Pair>>();
+
+            for (int i = 0; i < N; i++)
             {
-                A[i] = ri;
-                int B = ri;
-                int[] tmp = ria;
-                for (int j = 0; j < B; j++)
-                {
-                    C[i] |= 1 << tmp[j] - 1;
-                }
+                G.Add(new List<Pair>());
             }
 
-            int maxBit = (int)Math.Pow(2, N);
-            long[,] dp = new long[M + 1, maxBit];
-            FillArray(dp, long.MaxValue);
-            dp[0, 0] = 0;
             for (int i = 0; i < M; i++)
             {
-                for (int s = 0; s < maxBit; s++)
-                {
-                    if (dp[i, s] == long.MaxValue) continue;
-                    dp[i + 1, s] = Min(dp[i, s], dp[i + 1, s]);
-                    dp[i + 1, s | C[i]] = Min(dp[i + 1, s | C[i]], dp[i, s] + A[i]);
-                }
+                long l = rl-1;
+                long r = rl-1;
+                long d = rl;
+                G[(int)l].Add(new Pair(r, d));
+                G[(int)r].Add(new Pair(l, -d));
             }
 
-            long ans = dp[M, maxBit - 1];
-            if (ans == long.MaxValue)
-                ans = -1;
-            Console.WriteLine(ans);
+            bool[] visited = new bool[N];
+            long[] dist = new long[N];
+            bool ok = true;
+
+            Action<int, long> rec = null;
+            rec = (v, cost) =>
+            {
+                if (visited[v]) { 
+                    if(dist[v] != cost)
+                    {
+                        ok = false;
+                    }
+                }
+                else
+                {
+                    visited[v] = true;
+                    dist[v] = cost;
+                    foreach (var nv in G[v])
+                    {
+                        rec((int)nv.Item1, cost + nv.Item2);
+                    }
+                }                
+            };
+
+            for (int i = 0; i < N; i++)
+            {
+                if(!visited[i]) rec(i, 0);
+            }
+
+            Console.WriteLine(ok ? "Yes" : "No");
         }        
     }
 

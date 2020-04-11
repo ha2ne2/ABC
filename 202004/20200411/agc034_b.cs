@@ -2,54 +2,50 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC142.abc142_e.Cin;
-using static ABC142.abc142_e.Util;
-using Pair = ABC142.abc142_e.VTuple<long, long>;
+using static _20200411.agc034_b.Cin;
+using static _20200411.agc034_b.Util;
+using Pair = _20200411.agc034_b.VTuple<long, long>;
 
 /// <summary>
-/// ABC142
-/// E - Get Everything 
-/// https://atcoder.jp/contests/ABC142/tasks/abc142_e
+/// agc034
+/// B - ABC
+/// https://atcoder.jp/contests/agc034/tasks/agc034_b
 /// </summary>
-namespace ABC142.abc142_e
+namespace _20200411.agc034_b
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            int N = ri;
-            int M = ri;
-            int[] A = new int[M];
-            int[] C = new int[M];
-            for (int i = 0; i < M; i++)
+            string S = rs;
+            S += "XX";
+
+            long a = 0;
+            long bc = 0;
+            long sum = 0;
+
+            for (int i = 0; i < S.Length-1; i++)
             {
-                A[i] = ri;
-                int B = ri;
-                int[] tmp = ria;
-                for (int j = 0; j < B; j++)
+                if(S[i] == 'A')
                 {
-                    C[i] |= 1 << tmp[j] - 1;
+                    sum += bc * a;
+                    bc = 0;
+                    a++;
                 }
+                else if (S[i] == 'B' && S[i+1] == 'C')
+                {
+                    bc++;
+                    i++;
+                }
+                else
+                {
+                    sum += bc * a;
+                    a = 0;
+                    bc = 0;
+                }                
             }
 
-            int maxBit = (int)Math.Pow(2, N);
-            long[,] dp = new long[M + 1, maxBit];
-            FillArray(dp, long.MaxValue);
-            dp[0, 0] = 0;
-            for (int i = 0; i < M; i++)
-            {
-                for (int s = 0; s < maxBit; s++)
-                {
-                    if (dp[i, s] == long.MaxValue) continue;
-                    dp[i + 1, s] = Min(dp[i, s], dp[i + 1, s]);
-                    dp[i + 1, s | C[i]] = Min(dp[i + 1, s | C[i]], dp[i, s] + A[i]);
-                }
-            }
-
-            long ans = dp[M, maxBit - 1];
-            if (ans == long.MaxValue)
-                ans = -1;
-            Console.WriteLine(ans);
+            Console.WriteLine(sum);
         }        
     }
 

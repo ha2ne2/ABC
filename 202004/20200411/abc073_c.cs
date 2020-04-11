@@ -2,53 +2,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC142.abc142_e.Cin;
-using static ABC142.abc142_e.Util;
-using Pair = ABC142.abc142_e.VTuple<long, long>;
+using static _20200411.abc073_c.Cin;
+using static _20200411.abc073_c.Util;
+using Pair = _20200411.abc073_c.VTuple<long, long>;
 
 /// <summary>
-/// ABC142
-/// E - Get Everything 
-/// https://atcoder.jp/contests/ABC142/tasks/abc142_e
+/// abc073
+/// C - Write and Erase
+/// https://atcoder.jp/contests/abc073/tasks/abc073_c
 /// </summary>
-namespace ABC142.abc142_e
+namespace _20200411.abc073_c
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             int N = ri;
-            int M = ri;
-            int[] A = new int[M];
-            int[] C = new int[M];
-            for (int i = 0; i < M; i++)
+            long[] A;
+            ReadCol(out A, N);
+
+            HashSet<long> hs = new HashSet<long>();
+
+            foreach (var a in A)
             {
-                A[i] = ri;
-                int B = ri;
-                int[] tmp = ria;
-                for (int j = 0; j < B; j++)
+                if (hs.Contains(a))
                 {
-                    C[i] |= 1 << tmp[j] - 1;
+                    hs.Remove(a);
+                }
+                else
+                {
+                    hs.Add(a);
                 }
             }
 
-            int maxBit = (int)Math.Pow(2, N);
-            long[,] dp = new long[M + 1, maxBit];
-            FillArray(dp, long.MaxValue);
-            dp[0, 0] = 0;
-            for (int i = 0; i < M; i++)
-            {
-                for (int s = 0; s < maxBit; s++)
-                {
-                    if (dp[i, s] == long.MaxValue) continue;
-                    dp[i + 1, s] = Min(dp[i, s], dp[i + 1, s]);
-                    dp[i + 1, s | C[i]] = Min(dp[i + 1, s | C[i]], dp[i, s] + A[i]);
-                }
-            }
-
-            long ans = dp[M, maxBit - 1];
-            if (ans == long.MaxValue)
-                ans = -1;
+            long ans = hs.Count;
             Console.WriteLine(ans);
         }        
     }

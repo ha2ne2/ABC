@@ -2,53 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC142.abc142_e.Cin;
-using static ABC142.abc142_e.Util;
-using Pair = ABC142.abc142_e.VTuple<long, long>;
+using static _20200411.abc145_c.Cin;
+using static _20200411.abc145_c.Util;
+using Pair = _20200411.abc145_c.VTuple<long, long>;
 
 /// <summary>
-/// ABC142
-/// E - Get Everything 
-/// https://atcoder.jp/contests/ABC142/tasks/abc142_e
+/// abc145
+/// C - Average Length
+/// https://atcoder.jp/contests/abc145/tasks/abc145_c
 /// </summary>
-namespace ABC142.abc142_e
+namespace _20200411.abc145_c
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             int N = ri;
-            int M = ri;
-            int[] A = new int[M];
-            int[] C = new int[M];
-            for (int i = 0; i < M; i++)
+            long[] X, Y;
+            ReadCols(out X, out Y, N);
+            double sum = 0;
+
+            for (int i = 0; i < N-1; i++)
             {
-                A[i] = ri;
-                int B = ri;
-                int[] tmp = ria;
-                for (int j = 0; j < B; j++)
+                for (int j = i+1; j < N; j++)
                 {
-                    C[i] |= 1 << tmp[j] - 1;
+                    sum += Math.Sqrt(
+                        (X[i]-X[j]) * (X[i]-X[j]) +
+                        (Y[i]-Y[j]) * (Y[i]-Y[j])
+                        );
                 }
             }
 
-            int maxBit = (int)Math.Pow(2, N);
-            long[,] dp = new long[M + 1, maxBit];
-            FillArray(dp, long.MaxValue);
-            dp[0, 0] = 0;
-            for (int i = 0; i < M; i++)
-            {
-                for (int s = 0; s < maxBit; s++)
-                {
-                    if (dp[i, s] == long.MaxValue) continue;
-                    dp[i + 1, s] = Min(dp[i, s], dp[i + 1, s]);
-                    dp[i + 1, s | C[i]] = Min(dp[i + 1, s | C[i]], dp[i, s] + A[i]);
-                }
-            }
-
-            long ans = dp[M, maxBit - 1];
-            if (ans == long.MaxValue)
-                ans = -1;
+            double ans = sum * 2 / N;
             Console.WriteLine(ans);
         }        
     }
