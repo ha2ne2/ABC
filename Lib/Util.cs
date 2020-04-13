@@ -183,5 +183,20 @@ namespace Lib
             }
             return acc;
         }
+
+        public static void EachDXY4(int h, int w, int H, int W, Action<int, int> fn)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int nh = h + Util.DXY4[i];
+                int nw = w + Util.DXY4[i + 1];
+
+                if (0 <= nh && nh < H &&
+                    0 <= nw && nw < W)
+                {
+                    fn(nh, nw);
+                }
+            }
+        }
     }
 }

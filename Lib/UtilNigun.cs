@@ -10,30 +10,43 @@ namespace Lib
         /// <summary>
         /// めぐる式二分探索
         /// okにはpredを満たすindexを、ngにはpredを満たさないindexを指定します。
-        /// 引数がng＜okの場合、最小のokとなるindexをokに代入します。(lower_bound）
-        /// 引数がok＜ngの場合、最大のokとなるindexをokに代入します。(upper_bound）
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
-        /// <param name="okIndex"></param>
-        /// <param name="ngIndex"></param>
+        /// <param name="ng"></param>
+        /// <param name="ok"></param>
         /// <param name="pred"></param>
         public static void MeguruBinarySearch<T>(
             T[] array,
-            ref long okIndex,
-            ref long ngIndex,
+            ref long ng,
+            ref long ok,
             Predicate<T> pred)
         {
-            while (Math.Abs(okIndex - ngIndex) > 1)
+            while (Math.Abs(ok - ng) > 1)
             {
-                long mid = (okIndex + ngIndex) / 2;
+                long mid = (ok + ng) / 2;
                 if (pred(array[mid]))
                 {
-                    okIndex = mid;
+                    ok = mid;
                 }
                 else
                 {
-                    ngIndex = mid;
+                    ng = mid;
+                }
+            }
+        }
+
+        public static void EachDXY4(ref int h, ref int w, int H, int W, Action<int,int> fn)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int nh = h + Util.DXY4[i];
+                int nw = w + Util.DXY4[i + 1];
+
+                if(0 <= nh && nh < W &&
+                   0 <= nw && nw < W)
+                {
+                    fn(nh, nw);
                 }
             }
         }
