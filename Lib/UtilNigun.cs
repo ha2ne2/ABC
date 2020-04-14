@@ -264,7 +264,7 @@ namespace Lib
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static List<long> GetPrimes(long n)
+        public static List<long> GetPrimeFactors(long n)
         {
             List<long> primes = new List<long>();
 

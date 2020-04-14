@@ -19,18 +19,19 @@ namespace _20200413.abc059_b
         {
             string A = rs;
             string B = rs;
-            int len = Max(A.Length, B.Length);
+            if (A.Length < B.Length)
+            {
+                Console.WriteLine("LESS");
+                return;
+            }
 
-            int adiff = len - A.Length;
-            if (adiff > 0)
-                A = new string('0', adiff) + A;
-
-            int bdiff = len - B.Length;
-            if (bdiff > 0)
-                B = new string('0', bdiff) + B;
+            if (A.Length > B.Length)
+            {
+                Console.WriteLine("GREATER");
+                return;
+            }
 
             var res = Comparer<string>.Default.Compare(A, B);
-
             if (res < 0)
             {
                 Console.WriteLine("LESS");

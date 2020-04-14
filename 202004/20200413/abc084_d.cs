@@ -2,42 +2,61 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC162.abc162_e.Cin;
-using static ABC162.abc162_e.Util;
-using Pair = ABC162.abc162_e.VTuple<long, long>;
+using static _20200413.abc084_d.Cin;
+using static _20200413.abc084_d.Util;
+using Pair = _20200413.abc084_d.VTuple<long, long>;
 
 /// <summary>
-/// ABC162
-/// E - Sum of gcd of Tuples (Hard)
-/// https://atcoder.jp/contests/ABC162/tasks/abc162_e
+/// abc084
+/// D - 2017-like Number
+/// https://atcoder.jp/contests/abc084/tasks/abc084_d
 /// </summary>
-namespace ABC162.abc162_e
+namespace _20200413.abc084_d
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            int N = ri;
-            int K = ri;
-            Mint[] cnt = new Mint[K + 1];
-
-            for (int i = K; i >= 1; i--)
+            var primeList = GetPrimeList((int)1e5);
+            bool[] ok = new bool[(int)1e5 + 1];
+            foreach (var p in primeList)
             {
-                cnt[i] = Mint.Pow(K / i, N);
-                for (int j = i * 2; j <= K; j += i)
-                {
-                    cnt[i] -= cnt[j];
+                ok[p] = true;
+            }
+            long[] ok2 = new long[(int)1e5 + 1];
+            foreach (var p in primeList)
+            {
+                ok2[p] = ok[(p + 1) / 2] ? 1 : 0;
+            }
+
+            ok2 = Accumulate(ok2);
+
+            int Q = ri;
+            DontAutoFlush();
+            for (int i = 0; i < Q; i++)
+            {
+                int L = ri;
+                int R = ri;
+                Console.WriteLine(ok2[R+1] - ok2[L]);
+            }
+            Flush();
+        }
+
+        private static List<int> GetPrimeList(int limit) {
+            var primeNumbers = new List<int>();
+            primeNumbers.Add(2);
+
+            var num = 3;
+            while (num <= limit) {
+                if (!primeNumbers.Where(p => num % p == 0).Any()) {
+                    primeNumbers.Add(num);
                 }
+
+                num += 2;
             }
 
-            Mint ans = 0;
-            for (int i = 1; i <= K; i++)
-            {
-                ans += cnt[i] * i;
-            }
-
-            Console.WriteLine(ans);
-        }        
+            return primeNumbers;
+        }
     }
 
     /// <summary>

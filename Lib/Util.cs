@@ -198,5 +198,14 @@ namespace Lib
                 }
             }
         }
+
+        public static long FastPow(long a, long n)
+        {
+            if (n == 0) return 1;
+            long b = FastPow(a, n >> 1);
+            b *= b;
+            if ((n & 1) == 1) b *= a;
+            return b;
+        }
     }
 }

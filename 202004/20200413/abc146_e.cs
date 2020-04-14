@@ -2,41 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC162.abc162_e.Cin;
-using static ABC162.abc162_e.Util;
-using Pair = ABC162.abc162_e.VTuple<long, long>;
+using static _20200413.abc146_e.Cin;
+using static _20200413.abc146_e.Util;
+using Pair = _20200413.abc146_e.VTuple<long, long>;
 
 /// <summary>
-/// ABC162
-/// E - Sum of gcd of Tuples (Hard)
-/// https://atcoder.jp/contests/ABC162/tasks/abc162_e
+/// abc146
+/// E - Rem of Sum is Num
+/// https://atcoder.jp/contests/abc146/tasks/abc146_e
 /// </summary>
-namespace ABC162.abc162_e
+namespace _20200413.abc146_e
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            int N = ri;
-            int K = ri;
-            Mint[] cnt = new Mint[K + 1];
-
-            for (int i = K; i >= 1; i--)
-            {
-                cnt[i] = Mint.Pow(K / i, N);
-                for (int j = i * 2; j <= K; j += i)
-                {
-                    cnt[i] -= cnt[j];
-                }
-            }
-
-            Mint ans = 0;
-            for (int i = 1; i <= K; i++)
-            {
-                ans += cnt[i] * i;
-            }
-
-            Console.WriteLine(ans);
+           
         }        
     }
 

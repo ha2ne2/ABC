@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC162.abc162_e.Cin;
-using static ABC162.abc162_e.Util;
-using Pair = ABC162.abc162_e.VTuple<long, long>;
+using static _20200413.abc133_e.Cin;
+using static _20200413.abc133_e.Util;
+using Pair = _20200413.abc133_e.VTuple<long, long>;
+using Graph = System.Collections.Generic.List<System.Collections.Generic.List<long>>;
 
 /// <summary>
-/// ABC162
-/// E - Sum of gcd of Tuples (Hard)
-/// https://atcoder.jp/contests/ABC162/tasks/abc162_e
+/// abc133
+/// E - Virus Tree 2
+/// https://atcoder.jp/contests/abc133/tasks/abc133_e
 /// </summary>
-namespace ABC162.abc162_e
+namespace _20200413.abc133_e
 {
     public class Program
     {
@@ -19,23 +20,60 @@ namespace ABC162.abc162_e
         {
             int N = ri;
             int K = ri;
-            Mint[] cnt = new Mint[K + 1];
 
-            for (int i = K; i >= 1; i--)
+            Graph G = new Graph();
+            for (int i = 0; i < N; i++)
             {
-                cnt[i] = Mint.Pow(K / i, N);
-                for (int j = i * 2; j <= K; j += i)
+                G.Add(new List<long>());
+            }
+
+            for (int i = 0; i < N - 1; i++)
+            {
+                int a = ri - 1;
+                int b = ri - 1;
+                G[a].Add(b);
+                G[b].Add(a);
+            }
+
+
+            Func<int, int, Mint> rec = null;
+            rec = (from, v) =>
+            {
+                int canUseColorNum;
+                if (from == -1)
                 {
-                    cnt[i] -= cnt[j];
+                    canUseColorNum = K - 1;
                 }
-            }
+                else
+                {
+                    canUseColorNum = K - 2;
+                }
 
-            Mint ans = 0;
-            for (int i = 1; i <= K; i++)
-            {
-                ans += cnt[i] * i;
-            }
+                //if (canUseColorNum < G[v].Count)
+                //{
+                //    return 0;
+                //}
+                //else
+                //{
+                    Mint caseNum = 1;
+                    foreach(var to in G[v])
+                    {
+                        if (to == from) continue;
+                        caseNum *= canUseColorNum;
+                        canUseColorNum--;
+                    }
+                    foreach (var to in G[v])
+                    {
+                        if (to == from) continue;
+                        caseNum *= rec(v, (int)to);
+                    }
 
+                    return caseNum;
+                //}
+            };
+
+
+            Mint ans = K * rec(-1, 0);
             Console.WriteLine(ans);
         }        
     }

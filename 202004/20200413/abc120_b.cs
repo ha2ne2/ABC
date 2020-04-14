@@ -2,41 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Math;
-using static ABC162.abc162_e.Cin;
-using static ABC162.abc162_e.Util;
-using Pair = ABC162.abc162_e.VTuple<long, long>;
+using static _20200413.abc120_b.Cin;
+using static _20200413.abc120_b.Util;
+using Pair = _20200413.abc120_b.VTuple<long, long>;
 
 /// <summary>
-/// ABC162
-/// E - Sum of gcd of Tuples (Hard)
-/// https://atcoder.jp/contests/ABC162/tasks/abc162_e
+/// abc120
+/// B - K-th Common Divisor
+/// https://atcoder.jp/contests/abc120/tasks/abc120_b
 /// </summary>
-namespace ABC162.abc162_e
+namespace _20200413.abc120_b
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            int N = ri;
+            int A = ri;
+            int B = ri;
             int K = ri;
-            Mint[] cnt = new Mint[K + 1];
 
-            for (int i = K; i >= 1; i--)
+            int min = Min(A, B);
+            int cnt = 0;
+            for (int i = min; i >= 0; i--)
             {
-                cnt[i] = Mint.Pow(K / i, N);
-                for (int j = i * 2; j <= K; j += i)
+                if (A % i == 0 && B % i == 0)
                 {
-                    cnt[i] -= cnt[j];
+                    cnt++;
+                    if(cnt == K)
+                    {
+                        Console.WriteLine(i);
+                        return;
+                    }
                 }
             }
-
-            Mint ans = 0;
-            for (int i = 1; i <= K; i++)
-            {
-                ans += cnt[i] * i;
-            }
-
-            Console.WriteLine(ans);
         }        
     }
 

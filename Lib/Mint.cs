@@ -91,20 +91,33 @@ namespace Lib
             return b;
         }
 
+        /// <summary>
+        /// 定数MODを法とした時のnの逆元を返します。
+        /// 拡張ユークリッド互除法の行列による非再帰実装です。
+        /// 理解するためには、1次不定方程式における次の定理の証明の理解が必要です。
+        /// ax+by = 1 ⇔ aとbは互いに素
+        /// ax+by = cが整数解を持つ ⇔ cはgcd(a,b)の倍数
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         public static Mint Inv(Mint n)
         {
             long a = n.Value;
             long b = MOD;
 
+            // x,uの初期値は単位行列の一列目
             long x = 1;
             long u = 0;
             while (b != 0)
             {
                 long k = a / b;
-                long _x = u;
-                u = x - k * u;
-                x = _x;
 
+                // 行列の累積積の一列目
+                long _x = x;
+                x = u;
+                u = _x - (k * u);
+
+                // 現在の係数（Euclid）
                 long _a = a;
                 a = b;
                 b = _a - (k * b);
