@@ -28,7 +28,7 @@ namespace Lib
         }
 
         /// <summary>
-        /// calc nCk for O(1)
+        /// calc nCk for O(1). n <= 1e7.
         /// </summary>
         /// <param name="n"></param>
         /// <param name="k"></param>
@@ -43,6 +43,7 @@ namespace Lib
 
         /// <summary>
         /// nが大きくてkが小さいときに使える。
+        /// (n <= 1e9, k <= 1e7)
         /// </summary>
         /// <param name="n"></param>
         /// <param name="k"></param>
