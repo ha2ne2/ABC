@@ -63,13 +63,13 @@ namespace Lib
         #endregion
     }
 
-    public struct VTuple3<T1, T2, T3> : System.IComparable<VTuple3<T1, T2, T3>>, System.IEquatable<VTuple3<T1, T2, T3>>
+    public struct VTuple<T1, T2, T3> : System.IComparable<VTuple<T1, T2, T3>>, System.IEquatable<VTuple<T1, T2, T3>>
     {
         public T1 Item1;
         public T2 Item2;
         public T3 Item3;
 
-        public VTuple3(T1 item1, T2 item2, T3 item3)
+        public VTuple(T1 item1, T2 item2, T3 item3)
         {
             Item1 = item1;
             Item2 = item2;
@@ -80,7 +80,7 @@ namespace Lib
 
         public override bool Equals(object obj)
         {
-            return obj is VTuple3<T1, T2, T3> && Equals((VTuple3<T1, T2, T3>)obj);
+            return obj is VTuple<T1, T2, T3> && Equals((VTuple<T1, T2, T3>)obj);
         }
 
         public override int GetHashCode()
@@ -103,14 +103,14 @@ namespace Lib
 
         #region interface implementation
 
-        public bool Equals(VTuple3<T1, T2, T3> other)
+        public bool Equals(VTuple<T1, T2, T3> other)
         {
             return EqualityComparer<T1>.Default.Equals(Item1, other.Item1)
                 && EqualityComparer<T2>.Default.Equals(Item2, other.Item2)
                 && EqualityComparer<T3>.Default.Equals(Item3, other.Item3);
         }
 
-        public int CompareTo(VTuple3<T1, T2, T3> other)
+        public int CompareTo(VTuple<T1, T2, T3> other)
         {
             int c = Comparer<T1>.Default.Compare(Item1, other.Item1);
             if (c != 0) return c;
@@ -124,14 +124,14 @@ namespace Lib
         #endregion
     }
 
-    public struct VTuple4<T1, T2, T3, T4> : System.IComparable<VTuple4<T1, T2, T3, T4>>, System.IEquatable<VTuple4<T1, T2, T3, T4>>
+    public struct VTuple<T1, T2, T3, T4> : System.IComparable<VTuple<T1, T2, T3, T4>>, System.IEquatable<VTuple<T1, T2, T3, T4>>
     {
         public T1 Item1;
         public T2 Item2;
         public T3 Item3;
         public T4 Item4;
 
-        public VTuple4(T1 item1, T2 item2, T3 item3, T4 item4)
+        public VTuple(T1 item1, T2 item2, T3 item3, T4 item4)
         {
             Item1 = item1;
             Item2 = item2;
@@ -143,7 +143,7 @@ namespace Lib
 
         public override bool Equals(object obj)
         {
-            return obj is VTuple4<T1, T2, T3, T4> && Equals((VTuple4<T1, T2, T3, T4>)obj);
+            return obj is VTuple<T1, T2, T3, T4> && Equals((VTuple<T1, T2, T3, T4>)obj);
         }
 
         public override int GetHashCode()
@@ -168,7 +168,7 @@ namespace Lib
 
         #region interface implementation
 
-        public bool Equals(VTuple4<T1, T2, T3, T4> other)
+        public bool Equals(VTuple<T1, T2, T3, T4> other)
         {
             return EqualityComparer<T1>.Default.Equals(Item1, other.Item1)
                 && EqualityComparer<T2>.Default.Equals(Item2, other.Item2)
@@ -176,7 +176,7 @@ namespace Lib
                 && EqualityComparer<T4>.Default.Equals(Item4, other.Item4);
         }
 
-        public int CompareTo(VTuple4<T1, T2, T3, T4> other)
+        public int CompareTo(VTuple<T1, T2, T3, T4> other)
         {
             int c = Comparer<T1>.Default.Compare(Item1, other.Item1);
             if (c != 0) return c;

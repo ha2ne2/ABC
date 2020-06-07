@@ -10,9 +10,6 @@ namespace Lib
         // 10^17
         public static readonly long INF = (long)1e17;
 
-        // 10^9 + 7
-        public readonly static long MOD = (long)1e9 + 7;
-
         // 4近傍
         public readonly static int[] DXY4 = { 0, 1, 0, -1, 0 };
 
