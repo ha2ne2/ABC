@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>_20200407.agc036_a.Program</StartupObject>
+    <StartupObject>Scratch.Lengths</StartupObject>
   </PropertyGroup>
 
 </Project>

@@ -41,6 +41,7 @@ namespace Lib
             if (res > MOD) res -= MOD;
             return Ctor(res);
         }
+
         public static Mint operator -(Mint a, Mint b)
         {
             long res = a.Value - b.Value;

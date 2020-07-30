@@ -1,7 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Scratch
 {
+    public class Lengths
+    {
+        public static void Main(string[] args)
+        {
+            var lst = new List<int> { 1, 2, 3 };
+            Console.WriteLine(Length(lst));
+            Console.WriteLine(Length2(lst));
+            Console.WriteLine(Length3(lst));
+        }
+
+        public static long Length<T>(IEnumerable<T> list)
+        {
+            return !list.Any() ? 0 : 1 + Length(list.Skip(1));
+        }
+
+        public static long Length2<T>(IEnumerable<T> list)
+            => Length2Inner(list, 0);
+
+        public static long Length2Inner<T>(IEnumerable<T> list, long acc)
+        {
+            return !list.Any() ? acc : Length2Inner(list.Skip(1), acc + 1);
+        }
+
+        public static long Length3<T>(IEnumerable<T> list)
+            => Length3Inner(list, (n) => n);
+        public static long Length3Inner<T>(IEnumerable<T> list, Func<long,long> cont)
+        {
+            return !list.Any() ? cont(0) : Length3Inner(list.Skip(1), (n) => cont(n + 1));
+        }
+
+    }
+
+
     public struct Mint
     {
         public static long MOD = (long)1e9+7;

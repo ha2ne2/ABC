@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>_202005</RootNamespace>
-    <StartupObject>_20200523.abc085_a.Program</StartupObject>
+    <StartupObject>_20200730.LeetCode.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
